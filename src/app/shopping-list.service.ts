@@ -1,11 +1,16 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable, OnInit, EventEmitter } from '@angular/core';
 import { Item } from './model/item';
 import { ShoppingListModel } from './model/shoppingListModel';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingListService implements OnInit {
+
+  listsChanged = new EventEmitter<ShoppingListModel[]>();
+
+  // listChanged = new EventEmitter<ShoppingListModel>();
 
   private items1 = [
     new Item('potato', 1, 'kg', true),
@@ -26,13 +31,20 @@ export class ShoppingListService implements OnInit {
 
   ngOnInit(): void {
 
+
+
+  }
+
+  constructor() {
     this.shoppingLists = [];
 
+    this.list1 = new ShoppingListModel('By these from Penny\'s Market');
     this.list1.items = [];
     this.items1.forEach(item => {
       this.list1.items.push(item);
     });
 
+    this.list2 = new ShoppingListModel('Dedeman list');
     this.list2.items = [];
     this.items2.forEach(item => {
       this.list2.items.push(item);
@@ -41,11 +53,16 @@ export class ShoppingListService implements OnInit {
     this.shoppingLists.push(this.list1);
     this.shoppingLists.push(this.list2);
 
+    console.log(this.shoppingLists);
   }
 
-  constructor() { }
+  public getShoppingLists() {
+    return this.shoppingLists.slice();
+  }
 
-  // add ID for: items, shopping lists
-
+  public deleteShoppingList(list: ShoppingListModel) {
+    this.shoppingLists.splice(this.shoppingLists.indexOf(list), 1);
+    this.listsChanged.emit(this.shoppingLists.slice());
+  }
 
 }

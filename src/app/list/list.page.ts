@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ShoppingListService } from '../shopping-list.service';
+import { ShoppingListModel } from '../model/shoppingListModel';
 
 @Component({
   selector: 'app-list',
@@ -6,25 +8,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['list.page.scss']
 })
 export class ListPage implements OnInit {
+  lists: ShoppingListModel[];
+
   private selectedItem: any;
-  private icons = [
-    'list-box'
-  ];
-  public items: Array<{ title: string; note: string; icon: string }> = [];
-  constructor() {
-    for (let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }
-  }
+
+  constructor(private shoppingListService: ShoppingListService) { }
 
   ngOnInit() {
+    this.lists = this.shoppingListService.getShoppingLists();
+
+    this.shoppingListService.listsChanged
+      .subscribe(
+        (lists: ShoppingListModel[]) => {
+          this.lists = lists;
+        }
+      );
   }
-  // add back when alpha.4 is out
-  // navigate(item) {
-  //   this.router.navigate(['/list', JSON.stringify(item)]);
-  // }
+
+  public deleteShoppingList(shl: ShoppingListModel) {
+    this.shoppingListService.deleteShoppingList(shl);
+  }
 }

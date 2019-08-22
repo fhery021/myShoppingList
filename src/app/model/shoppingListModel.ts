@@ -1,9 +1,13 @@
 import { Item } from './item';
 
 export class ShoppingListModel {
-    private id: number;
+    public name: string;
+
     public items: Item[];
 
+    constructor(name: string) {
+        this.name = name;
+     }
     // public addItem()
 
     // public addItem(newItem: Item) {
@@ -16,4 +20,5 @@ export class ShoppingListModel {
     //         this.items.splice(index, 1);
     //     }
     // }
+
 }
