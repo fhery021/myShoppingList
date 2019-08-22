@@ -23,7 +23,7 @@ export class AppComponent {
     },
     {
       title: 'Create',
-      url: '/edit',
+      url: '/create',
       icon: 'create'
     }
   ];
