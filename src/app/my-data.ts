@@ -2,7 +2,7 @@ import { ShoppingListModel } from './model/shoppingListModel';
 import { Item } from './model/item';
 
 export class MyData {
-    private shoppingLists: ShoppingListModel[];
+    private shoppingLists: Array<ShoppingListModel> = new Array<ShoppingListModel>();
 
     private items1 = [
         new Item('potato', 1, 'kg', true),
