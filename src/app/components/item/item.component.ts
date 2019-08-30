@@ -19,5 +19,12 @@ export class ItemComponent implements OnInit {
   ngOnInit() {
   }
 
+  onClickEditItem() {
+    this.editMode = true;
+  }
+
+  onClickSaveItem() {
+    this.editMode = false;
+  }
 
 }

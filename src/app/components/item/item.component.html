@@ -2,14 +2,11 @@
   <ion-card-header>
     <ion-toolbar>
       <ion-buttons slot="primary">
-        <ion-button>
+        <ion-button (click)="onClickEditItem()" *ngIf="!editMode">
           <ion-icon name="create"></ion-icon>
         </ion-button>
-        <ion-button>
+        <ion-button (click)="onClickSaveItem()" *ngIf="editMode">
           <ion-icon name="save"></ion-icon>
-        </ion-button>
-        <ion-button>
-          <ion-icon name="close"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
@@ -18,36 +15,40 @@
   <ion-card-content>
     <ion-grid>
       <ion-row>
-        <ion-col>
+        <ion-col size="auto">
           <ion-item>
-            <ion-input #product readonly>{{ item.name }}</ion-input>
+            <ion-label position="floating" *ngIf="editMode">Product</ion-label>
+            <ion-input [readonly]="!editMode" [(ngModel)]="item.name"></ion-input>
           </ion-item>
         </ion-col>
 
-        <ion-col>
+        <ion-col *ngIf="item.quantity || editMode">
           <ion-item>
-            <ion-input readonly>{{ item.quantity }}</ion-input>
+            <ion-label position="floating" *ngIf="editMode">Quantity</ion-label>
+            <ion-input [readonly]="!editMode" [(ngModel)]="item.quantity">{{item.quantity}}</ion-input>
           </ion-item>
         </ion-col>
 
-        <ion-col>
+        <ion-col *ngIf="item.unit || editMode">
           <ion-item>
-            <ion-input readonly>{{item.unit }}</ion-input>
+            <ion-label position="floating" *ngIf="editMode">Unit</ion-label>
+            <ion-input [readonly]="!editMode" [(ngModel)]="item.unit"></ion-input>
           </ion-item>
         </ion-col>
 
         <ion-col>
           <ion-item>
             <ion-label>Shopped</ion-label>
-            <ion-checkbox checked={{item.isShopped}}></ion-checkbox>
+            <ion-checkbox [(ngModel)]="item.isShopped"></ion-checkbox>
           </ion-item>
         </ion-col>
       </ion-row>
 
     </ion-grid>
 
-    <ion-item>
-      <ion-textarea type="text" readonly>{{item.notes}}</ion-textarea>
+    <ion-item *ngIf="item.notes || editMode">
+      <ion-label position="floating" *ngIf="editMode">Notes</ion-label>
+      <ion-textarea type="text" [readonly]="!editMode" [(ngModel)]="item.notes"></ion-textarea>
     </ion-item>
 
   </ion-card-content>
