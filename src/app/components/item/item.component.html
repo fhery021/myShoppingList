@@ -1,48 +1,54 @@
-<ion-grid>
-  <ion-row>
-    <ion-col>
-      <ion-item>
-        <ion-label position="floating">Product</ion-label>
-        <ion-input></ion-input>
-      </ion-item>
-    </ion-col>
+<ion-card>
+  <ion-card-header>
+    <ion-toolbar>
+      <ion-buttons slot="primary">
+        <ion-button>
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+        <ion-button>
+          <ion-icon name="save"></ion-icon>
+        </ion-button>
+        <ion-button>
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
 
-    <ion-col>
-      <ion-item>
-        <ion-label position="floating">Quantity</ion-label>
-        <ion-input></ion-input>
-      </ion-item>
-    </ion-col>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-input #product readonly>{{ item.name }}</ion-input>
+          </ion-item>
+        </ion-col>
 
-    <ion-col>
-      <ion-item>
-        <ion-label position="floating">Units</ion-label>
-        <ion-input></ion-input>
-      </ion-item>
-    </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-input readonly>{{ item.quantity }}</ion-input>
+          </ion-item>
+        </ion-col>
 
-    <ion-col *ngIf="isShoppedVisible">
-      <ion-item>
-        <ion-label>Shopped</ion-label>
-        <ion-checkbox></ion-checkbox>
-      </ion-item>
-    </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-input readonly>{{item.unit }}</ion-input>
+          </ion-item>
+        </ion-col>
 
-    <ion-col>
-      <ion-toolbar>
-        <ion-buttons slot="primary">
-          <ion-button>
-            <ion-icon name="create"></ion-icon>
-          </ion-button>
-          <ion-button>
-            <ion-icon name="save"></ion-icon>
-          </ion-button>
-          <ion-button>
-            <ion-icon name="close"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+        <ion-col>
+          <ion-item>
+            <ion-label>Shopped</ion-label>
+            <ion-checkbox checked={{item.isShopped}}></ion-checkbox>
+          </ion-item>
+        </ion-col>
+      </ion-row>
 
+    </ion-grid>
+
+    <ion-item>
+      <ion-textarea type="text" readonly>{{item.notes}}</ion-textarea>
+    </ion-item>
+
+  </ion-card-content>
+</ion-card>

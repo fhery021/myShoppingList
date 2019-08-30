@@ -5,15 +5,15 @@ export class MyData {
     private shoppingLists: Array<ShoppingListModel> = new Array<ShoppingListModel>();
 
     private items1 = [
-        new Item('potato', 1, 'kg', true),
-        new Item('tomato', 2, 'piece', false),
-        new Item('chicken', 2.5, 'kg', true)
+        new Item('potato', 1, 'kg', 'Big, transparent sack', true),
+        new Item('tomato', 2, 'piece', '', false),
+        new Item('chicken', 2.5, 'kg', '', true)
     ];
 
     private items2 = [
-        new Item('cucumber', 1, 'piece', true),
-        new Item('beer', 3, 'bottle', false),
-        new Item('milk', 2, 'litre', true)
+        new Item('cucumber', 1, 'piece', '', true),
+        new Item('beer', 3, 'bottle', '', false),
+        new Item('milk', 2, 'litre', '', true)
     ];
 
     private list1: ShoppingListModel;

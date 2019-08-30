@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Item } from 'src/app/model/item';
 
 @Component({
   selector: 'app-item',
@@ -7,10 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ItemComponent implements OnInit {
 
-  isShoppedVisible = false;
+  @Input() item: Item;
 
-  constructor() { }
+  editMode = false;
 
-  ngOnInit() {}
+  constructor() {
+
+  }
+
+  ngOnInit() {
+  }
+
 
 }
