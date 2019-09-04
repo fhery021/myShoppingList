@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CreatePage } from './create.page';
 import { Item } from '../model/item';
-import { ItemComponent } from '../components/item/item.component';
+import { SharedModule } from '../shared/shared.module';
 
 const routes: Routes = [
   {
@@ -22,9 +22,11 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    SharedModule
   ],
-  declarations: [CreatePage, ItemComponent]
+  entryComponents: [],
+  declarations: [CreatePage]
 })
 export class CreatePageModule {
   item: Item;

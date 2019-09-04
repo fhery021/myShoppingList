@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Item } from '../model/item';
 import { ShoppingListService } from '../shopping-list.service';
 import { Router } from '@angular/router';
-import { ItemService } from '../components/item/item.service';
+import { ItemService } from '../shared/item/item.service';
 
 @Component({
   selector: 'app-create',

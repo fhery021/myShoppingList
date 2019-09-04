@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { DetailPageModule } from './detail/detail.module';
 
 const routes: Routes = [
   {
@@ -16,7 +17,7 @@ const routes: Routes = [
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
   },
   { path: 'create', loadChildren: './create/create.module#CreatePageModule' },
-  { path: 'detail', loadChildren: './detail/detail.module#DetailPageModule' }
+  { path: 'detail/:name',  loadChildren: './detail/detail.module#DetailPageModule' }
 
 ];
 

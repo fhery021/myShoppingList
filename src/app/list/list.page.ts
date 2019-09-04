@@ -28,4 +28,8 @@ export class ListPage implements OnInit {
   public onDeleteShoppingList(shl: ShoppingListModel) {
     this.shoppingListService.deleteShoppingList(shl);
   }
+
+  public onClickShoppingList(sl: ShoppingListModel) {
+    
+  }
 }

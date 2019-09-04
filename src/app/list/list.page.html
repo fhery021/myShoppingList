@@ -11,15 +11,10 @@
 
 <ion-content>
 
-  <!--
-    <div *ngIf="selectedItem" padding>
-      You navigated here from <b>{{selectedItem.title }}</b>
-    </div>
-  -->
   <ion-list>
     <ion-item *ngFor="let shoppingList of lists">
       <ion-icon name="list-box" slot="start"></ion-icon>
-      {{ shoppingList.name }}
+      <a routerLink="/detail/{{shoppingList.name}}" routerLinkActive="router-link-active" >{{ shoppingList.name }} </a>
       <div class="item-note" slot="end">
         <ion-icon name="trash" (click)="onDeleteShoppingList(shoppingList)"></ion-icon>
       </div>

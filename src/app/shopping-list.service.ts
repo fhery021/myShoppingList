@@ -2,6 +2,7 @@ import { Injectable, OnInit, EventEmitter } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ShoppingListModel } from './model/shoppingListModel';
 import { MyData } from './my-data';
+import { Observable, of } from 'rxjs';
 
 
 @Injectable({
@@ -27,6 +28,10 @@ export class ShoppingListService {
 
   public getShoppingLists() {
     return this.shoppingLists.slice();
+  }
+
+  public getShoppingListByName(name: string): Observable<ShoppingListModel> {
+    return of(this.shoppingLists.find(sl => sl.name === name));
   }
 
   public deleteShoppingList(list: ShoppingListModel) {
