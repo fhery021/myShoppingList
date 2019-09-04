@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Item } from '../model/item';
 import { ShoppingListService } from '../shopping-list.service';
 import { Router } from '@angular/router';
+import { ItemService } from '../components/item/item.service';
 
 @Component({
   selector: 'app-create',
@@ -28,7 +29,8 @@ export class CreatePage implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
-              private shoppingListService: ShoppingListService) {
+              private shoppingListService: ShoppingListService,
+              private itemService: ItemService) {
     this.createForm = this.formBuilder.group({
       product: ['', Validators.required],
       quantity: [''],
@@ -39,26 +41,22 @@ export class CreatePage implements OnInit {
   }
 
   ngOnInit() {
+    this.itemService.itemChanged
+      .subscribe(
+        (changedItem: Item) => {
+          this.changeItem(changedItem);
+        }
+      );
+    this.itemService.itemDeleted
+      .subscribe(
+        (deletedItem: Item) => {
+          this.deleteItem(deletedItem);
+        }
+      );
   }
 
   onSaveShoppingList() {
-    console.log('save shopping list pressed');
-
-    if (this.shoppingListName === '') {
-      this.shoppingListService.presentAlert('Empty Name', 'Shopping list name is mandatory');
-      return;
-    }
-
-    if (this.items.length === 0) {
-      this.shoppingListService.presentAlert('Empty Items', 'Add at least one product to the shopping list');
-      return;
-    }
-
-    this.shoppingList = new ShoppingListModel(this.shoppingListName, this.items);
-    const alreadyCreated = this.shoppingListService.createNewShoppingList(this.shoppingList);
-    if (alreadyCreated) {
-      this.shoppingListService.presentAlert('Already Created', 'Shopping list already created.');
-    } else {
+    if (this.shoppingListService.createNewShoppingList(new ShoppingListModel(this.shoppingListName, this.items))) {
       this.clear();
       this.router.navigate(['/list']);
     }
@@ -70,11 +68,18 @@ export class CreatePage implements OnInit {
     if (this.newItem.product === null || this.newItem.product === '') {
       this.shoppingListService.presentAlert('Empty Product', 'Product name is mandatory!');
     } else {
-      this.items.push(new Item(this.newItem.product, this.newItem.quantity, this.newItem.unit, this.newItem.notes, false));
+      this.items.push(
+        this.itemService.newItem(this.newItem.product, this.newItem.quantity, this.newItem.unit, this.newItem.notes, false));
     }
   }
 
-  onDeleteItem(item) {
+  private deleteItem(item) {
+    this.items.forEach((element, index) => {
+      if (element === item) { this.items.splice(index, 1); }
+    });
+  }
+
+  private changeItem(item) {
     this.items.forEach((element, index) => {
       if (element === item) { this.items.splice(index, 1); }
     });
@@ -85,5 +90,6 @@ export class CreatePage implements OnInit {
     this.createForm.reset();
     this.items = new Array<Item>();
   }
+
 
 }

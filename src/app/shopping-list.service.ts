@@ -39,17 +39,41 @@ export class ShoppingListService {
     return this.LIST_NAME + ' ' + dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString();
   }
 
-  public createNewShoppingList(newList: ShoppingListModel) {
-    let alreadyCreated = false;
+  validateShoppingList(sl: ShoppingListModel) {
+    if (sl.name === '' || sl.name === null) {
+      this.presentAlert('Empty Name', 'Shopping list name is mandatory');
+      return false;
+    }
+
+    if (sl.items === null || sl.items.length === 0) {
+      this.presentAlert('Empty Items', 'Add at least one product to the shopping list');
+      return false;
+    }
+    return true;
+  }
+
+  checkNotAlreadyCreated(sl: ShoppingListModel) {
     this.shoppingLists.forEach((element, index) => {
-      if (element.equals(newList)) {
-        alreadyCreated = true;
+      if (element.equals(sl)) {
+        this.presentAlert('Already Created', 'Shopping list already created.');
+        return false;
       }
     });
-    if (!alreadyCreated) {
+    return true;
+  }
+
+  public createNewShoppingList(newList: ShoppingListModel) {
+    if (this.validateShoppingList(newList) && this.checkNotAlreadyCreated(newList)) {
       this.shoppingLists.push(newList);
+      return true;
     }
-    return alreadyCreated;
+    return false;
+  }
+
+  public updateShoppingList(l: ShoppingListModel) {
+    if (this.validateShoppingList(l)) {
+      // this.shoppingLists.find(sh) by name
+    }
   }
 
   public async presentAlert(msgHeader: string, msgContent: string) {

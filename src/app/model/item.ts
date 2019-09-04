@@ -1,7 +1,7 @@
 export class Item {
 
     constructor(
-        // private id: number,
+        public id: string,
         public name: string,
         public quantity: number,
         public unit: string,
@@ -9,7 +9,7 @@ export class Item {
         public isShopped: boolean
     ) { }
     public equals(item: Item) {
-        return this.name === item.name || this.quantity === item.quantity ||
-         this.unit === item.unit || this.notes === item.notes || this.isShopped === item.isShopped;
+        return this.id === item.id && this.name === item.name && this.quantity === item.quantity &&
+         this.unit === item.unit && this.notes === item.notes && this.isShopped === item.isShopped;
     }
 }

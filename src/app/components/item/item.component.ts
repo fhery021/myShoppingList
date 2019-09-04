@@ -1,10 +1,12 @@
 import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { Item } from 'src/app/model/item';
+import { ItemService } from './item.service';
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'app-item',
   templateUrl: './item.component.html',
-  styleUrls: ['./item.component.scss'],
+  styleUrls: ['./item.component.scss']
 })
 export class ItemComponent implements OnInit {
 
@@ -12,12 +14,9 @@ export class ItemComponent implements OnInit {
 
   editMode = false;
 
-  public itemChanged = new EventEmitter<Item>();
-  public itemDeleted = new EventEmitter<Item>();
-
-  constructor() {
-
+  constructor(private itemService: ItemService) {
   }
+
 
   ngOnInit() {
   }
@@ -27,13 +26,12 @@ export class ItemComponent implements OnInit {
   }
 
   onClickSaveItem() {
-    // shoppintlistservice.itemchanged()
-    this.itemChanged.emit(this.item);
+    this.itemService.itemChanged.emit(this.item);
     this.editMode = false;
   }
 
   onClickDeleteItem() {
-    this.itemDeleted.emit(this.item);
+    this.itemService.itemDeleted.emit(this.item);
   }
 
 }
