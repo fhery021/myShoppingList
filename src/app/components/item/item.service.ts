@@ -17,4 +17,11 @@ export class ItemService {
     console.log(item);
     return item;
   }
+
+  public updateItem(oldItem: Item, newItem: Item) {
+    oldItem.name = newItem.name;
+    oldItem.quantity = newItem.quantity;
+    oldItem.unit = newItem.unit;
+    oldItem.notes = newItem.notes;
+  }
 }

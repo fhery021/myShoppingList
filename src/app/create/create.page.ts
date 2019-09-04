@@ -73,16 +73,21 @@ export class CreatePage implements OnInit {
     }
   }
 
-  private deleteItem(item) {
+  private deleteItem(item: Item) {
     this.items.forEach((element, index) => {
       if (element === item) { this.items.splice(index, 1); }
     });
   }
 
-  private changeItem(item) {
-    this.items.forEach((element, index) => {
-      if (element === item) { this.items.splice(index, 1); }
-    });
+  private changeItem(item: Item) {
+    // change with update function from item service AND USE FIND INSTEAD OF FOREACH
+    const index = this.items.findIndex(el => el.id === item.id);
+
+    if (index !== -1) {
+      this.itemService.updateItem(this.items[index], item);
+    } else {
+      console.log('item not found with index: ' + index);
+    }
   }
 
   private clear() {
