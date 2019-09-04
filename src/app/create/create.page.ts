@@ -59,6 +59,7 @@ export class CreatePage implements OnInit {
     if (alreadyCreated) {
       this.shoppingListService.presentAlert('Already Created', 'Shopping list already created.');
     } else {
+      this.clear();
       this.router.navigate(['/list']);
     }
   }
@@ -66,7 +67,7 @@ export class CreatePage implements OnInit {
   onSubmitAddItem() {
     console.log('add item pressed');
     this.newItem = this.createForm.value;
-    if (this.newItem.product === '') {
+    if (this.newItem.product === null || this.newItem.product === '') {
       this.shoppingListService.presentAlert('Empty Product', 'Product name is mandatory!');
     } else {
       this.items.push(new Item(this.newItem.product, this.newItem.quantity, this.newItem.unit, this.newItem.notes, false));
@@ -79,7 +80,7 @@ export class CreatePage implements OnInit {
     });
   }
 
-  onClear() {
+  private clear() {
     this.shoppingListName = this.shoppingListService.generateShoppingListName();
     this.createForm.reset();
     this.items = new Array<Item>();
