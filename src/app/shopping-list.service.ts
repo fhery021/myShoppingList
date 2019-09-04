@@ -49,7 +49,7 @@ export class ShoppingListService {
     if (!alreadyCreated) {
       this.shoppingLists.push(newList);
     }
-
+    return alreadyCreated;
   }
 
   public async presentAlert(msgHeader: string, msgContent: string) {

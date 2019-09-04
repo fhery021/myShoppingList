@@ -3,6 +3,7 @@ import { ShoppingListModel } from '../model/shoppingListModel';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Item } from '../model/item';
 import { ShoppingListService } from '../shopping-list.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create',
@@ -26,6 +27,7 @@ export class CreatePage implements OnInit {
   };
 
   constructor(private formBuilder: FormBuilder,
+              private router: Router,
               private shoppingListService: ShoppingListService) {
     this.createForm = this.formBuilder.group({
       product: ['', Validators.required],
@@ -44,9 +46,20 @@ export class CreatePage implements OnInit {
 
     if (this.shoppingListName === '') {
       this.shoppingListService.presentAlert('Empty Name', 'Shopping list name is mandatory');
+      return;
+    }
+
+    if (this.items.length === 0) {
+      this.shoppingListService.presentAlert('Empty Items', 'Add at least one product to the shopping list');
+      return;
+    }
+
+    this.shoppingList = new ShoppingListModel(this.shoppingListName, this.items);
+    const alreadyCreated = this.shoppingListService.createNewShoppingList(this.shoppingList);
+    if (alreadyCreated) {
+      this.shoppingListService.presentAlert('Already Created', 'Shopping list already created.');
     } else {
-      this.shoppingList = new ShoppingListModel(this.shoppingListName, this.items);
-      this.shoppingListService.createNewShoppingList(this.shoppingList);
+      this.router.navigate(['/list']);
     }
   }
 
@@ -64,6 +77,12 @@ export class CreatePage implements OnInit {
     this.items.forEach((element, index) => {
       if (element === item) { this.items.splice(index, 1); }
     });
+  }
+
+  onClear() {
+    this.shoppingListName = this.shoppingListService.generateShoppingListName();
+    this.createForm.reset();
+    this.items = new Array<Item>();
   }
 
 }
