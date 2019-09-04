@@ -5,20 +5,29 @@ export class ShoppingListModel {
 
     public items: Item[];
 
-    constructor(name: string) {
+    constructor(name: string, items: Item[]) {
         this.name = name;
-     }
-    // public addItem()
+        this.items = items;
+    }
 
-    // public addItem(newItem: Item) {
-    //     this.items.push(newItem);
-    // }
+    public equals(slm: ShoppingListModel) {
+        if (this.name !== slm.name || this.items.length !== slm.items.length) {
+            return false;
+        } else {
+            return this.eq(this.items, slm.items);
+        }
+    }
 
-    // public removeItem(item: Item){
-    //     const index: number = this.items.indexOf(item);
-    //     if (index !== -1){
-    //         this.items.splice(index, 1);
-    //     }
-    // }
+    // too ugly, change it when you are getting smarter
+    private eq(items1: Item[], items2: Item[]) {
+        for (const i1 of items1) {
+            for (const i2 of items2) {
+                if (!i1.equals(i2)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
 }

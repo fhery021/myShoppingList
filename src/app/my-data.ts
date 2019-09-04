@@ -20,19 +20,8 @@ export class MyData {
     private list2: ShoppingListModel;
 
     constructor() {
-
-
-        this.list1 = new ShoppingListModel('By these from Penny\'s Market');
-        this.list1.items = [];
-        this.items1.forEach(item => {
-            this.list1.items.push(item);
-        });
-
-        this.list2 = new ShoppingListModel('Dedeman list');
-        this.list2.items = [];
-        this.items2.forEach(item => {
-            this.list2.items.push(item);
-        });
+        this.list1 = new ShoppingListModel('By these from Penny\'s Market', this.items1);
+        this.list2 = new ShoppingListModel('Dedeman list', this.items2);
 
         this.shoppingLists.push(this.list1);
         this.shoppingLists.push(this.list2);

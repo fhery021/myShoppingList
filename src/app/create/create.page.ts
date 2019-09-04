@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ShoppingListModel } from '../model/shoppingListModel';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Item } from '../model/item';
-import { AlertController } from '@ionic/angular';
+import { ShoppingListService } from '../shopping-list.service';
 
 @Component({
   selector: 'app-create',
@@ -13,7 +13,8 @@ export class CreatePage implements OnInit {
 
   createForm: FormGroup;
 
-  // shoppingList: ShoppingListModel;
+  shoppingListName: string;
+  shoppingList: ShoppingListModel;
 
   items: Item[] = new Array<Item>();
 
@@ -24,43 +25,39 @@ export class CreatePage implements OnInit {
     notes: string
   };
 
-  constructor(private formBuilder: FormBuilder, private alertController: AlertController) {
+  constructor(private formBuilder: FormBuilder,
+              private shoppingListService: ShoppingListService) {
     this.createForm = this.formBuilder.group({
       product: ['', Validators.required],
       quantity: [''],
       unit: [''],
       notes: ['']
     });
-  }
-
-  async presentAlert() {
-    const alert = await this.alertController.create({
-      header: 'Empty Product',
-      message: 'Product name is mandatory!',
-      buttons: ['OK']
-    });
-
-    await alert.present();
+    this.shoppingListName = shoppingListService.generateShoppingListName();
   }
 
   ngOnInit() {
   }
 
   onSaveShoppingList() {
-    console.log('save shopping list ');
+    console.log('save shopping list pressed');
+
+    if (this.shoppingListName === '') {
+      this.shoppingListService.presentAlert('Empty Name', 'Shopping list name is mandatory');
+    } else {
+      this.shoppingList = new ShoppingListModel(this.shoppingListName, this.items);
+      this.shoppingListService.createNewShoppingList(this.shoppingList);
+    }
   }
 
   onSubmitAddItem() {
     console.log('add item pressed');
     this.newItem = this.createForm.value;
-    if (this.newItem.product !== '') {
-      this.items.push(new Item(this.newItem.product, this.newItem.quantity, this.newItem.unit, this.newItem.notes, false));
+    if (this.newItem.product === '') {
+      this.shoppingListService.presentAlert('Empty Product', 'Product name is mandatory!');
     } else {
-      this.presentAlert();
+      this.items.push(new Item(this.newItem.product, this.newItem.quantity, this.newItem.unit, this.newItem.notes, false));
     }
-
-    // console.log(this.items);
-
   }
 
   onDeleteItem(item) {

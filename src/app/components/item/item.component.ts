@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { Item } from 'src/app/model/item';
 
 @Component({
@@ -12,6 +12,9 @@ export class ItemComponent implements OnInit {
 
   editMode = false;
 
+  public itemChanged = new EventEmitter<Item>();
+  public itemDeleted = new EventEmitter<Item>();
+
   constructor() {
 
   }
@@ -24,7 +27,13 @@ export class ItemComponent implements OnInit {
   }
 
   onClickSaveItem() {
+    // shoppintlistservice.itemchanged()
+    this.itemChanged.emit(this.item);
     this.editMode = false;
+  }
+
+  onClickDeleteItem() {
+    this.itemDeleted.emit(this.item);
   }
 
 }
