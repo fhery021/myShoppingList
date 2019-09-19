@@ -1,14 +1,17 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Item } from 'src/app/model/item';
 import { Md5 } from 'ts-md5/dist/md5';
+import { ItemEvent } from 'src/app/model/ItemEvent';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemService {
 
-  public itemChanged = new EventEmitter<Item>();
-  public itemDeleted = new EventEmitter<Item>();
+  public itemChanged = new EventEmitter<ItemEvent>();
+  public itemDeleted = new EventEmitter<ItemEvent>();
+
+  private pageName: string;
 
   constructor(private md5: Md5) { }
 

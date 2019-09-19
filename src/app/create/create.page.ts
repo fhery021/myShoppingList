@@ -5,6 +5,7 @@ import { Item } from '../model/item';
 import { ShoppingListService } from '../shopping-list.service';
 import { Router } from '@angular/router';
 import { ItemService } from '../shared/item/item.service';
+import { ItemEvent } from '../model/ItemEvent';
 
 @Component({
   selector: 'app-create',
@@ -27,10 +28,14 @@ export class CreatePage implements OnInit {
     notes: string
   };
 
-  constructor(private formBuilder: FormBuilder,
-              private router: Router,
-              private shoppingListService: ShoppingListService,
-              private itemService: ItemService) {
+  private PAGE_NAME = 'create';
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private shoppingListService: ShoppingListService,
+    private itemService: ItemService) {
+
     this.createForm = this.formBuilder.group({
       product: ['', Validators.required],
       quantity: [''],
@@ -43,13 +48,13 @@ export class CreatePage implements OnInit {
   ngOnInit() {
     this.itemService.itemChanged
       .subscribe(
-        (changedItem: Item) => {
+        (changedItem: ItemEvent) => {
           this.changeItem(changedItem);
         }
       );
     this.itemService.itemDeleted
       .subscribe(
-        (deletedItem: Item) => {
+        (deletedItem: ItemEvent) => {
           this.deleteItem(deletedItem);
         }
       );
@@ -74,20 +79,25 @@ export class CreatePage implements OnInit {
     }
   }
 
-  private deleteItem(item: Item) {
-    this.items.forEach((element, index) => {
-      if (element === item) { this.items.splice(index, 1); }
-    });
+  private deleteItem(itemEvent: ItemEvent) {
+    if (itemEvent.pageName === this.PAGE_NAME) {
+      const item = itemEvent.item;
+      this.items.forEach((element, index) => {
+        if (element === item) { this.items.splice(index, 1); }
+      });
+    }
   }
 
-  private changeItem(item: Item) {
-    // change with update function from item service AND USE FIND INSTEAD OF FOREACH
-    const index = this.items.findIndex(el => el.id === item.id);
+  private changeItem(itemEvent: ItemEvent) {
+    if (itemEvent.pageName === this.PAGE_NAME) {
+      const item = itemEvent.item;
+      const index = this.items.findIndex(el => el.id === item.id);
 
-    if (index !== -1) {
-      this.itemService.updateItem(this.items[index], item);
-    } else {
-      console.log('item not found with index: ' + index);
+      if (index !== -1) {
+        this.itemService.updateItem(this.items[index], item);
+      } else {
+        console.log('item not found with index: ' + index);
+      }
     }
   }
 

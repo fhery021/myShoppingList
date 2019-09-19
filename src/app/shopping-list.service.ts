@@ -84,9 +84,23 @@ export class ShoppingListService {
     return sl;
   }
 
-  public updateShoppingList(l: ShoppingListModel) {
-    if (this.validateShoppingList(l.name, l.items)) {
-      // this.shoppingLists.find(sh) by name
+  public updateShoppingListItem(shoppingListId: string, item: Item): void {
+    const slIndex = this.shoppingLists.findIndex(sl => sl.id === shoppingListId);
+    if (slIndex !== -1) {
+      const itemIndex = this.shoppingLists[slIndex].items.findIndex(i => i.id === item.id);
+      if (itemIndex !== -1) {
+        this.shoppingLists[slIndex].items[itemIndex] = item;
+      }
+    }
+  }
+
+  public deleteShoppingListItem(shoppingListId: string, item: Item): void {
+    const slIndex = this.shoppingLists.findIndex(sl => sl.id === shoppingListId);
+    if (slIndex !== -1) {
+      const itemIndex = this.shoppingLists[slIndex].items.findIndex(i => i.id === item.id);
+      if (itemIndex !== -1) {
+        this.shoppingLists[slIndex].items.splice(itemIndex, 1);
+      }
     }
   }
 
