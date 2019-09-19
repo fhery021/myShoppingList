@@ -16,7 +16,12 @@
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-item (click)="exitApp()">
+            <ion-icon slot="start" color="medium" name="exit"></ion-icon>
+            <ion-label>Exit</ion-label>
+          </ion-item>
         </ion-list>
+        
       </ion-content>
     </ion-menu>
     <ion-router-outlet main></ion-router-outlet>
