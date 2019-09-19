@@ -25,8 +25,8 @@ export class DetailPage implements OnInit {
 
   private getShoppingList(): void {
     // todo make this getById see https://angular.io/tutorial/toh-pt5
-    const name = this.route.snapshot.paramMap.get('name');
-    this.shoppingListService.getShoppingListByName(name)
+    const id = this.route.snapshot.paramMap.get('id');
+    this.shoppingListService.getShoppingListById(id)
       .subscribe(sl => this.shoppingList = sl);
   }
 

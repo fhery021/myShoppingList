@@ -3,6 +3,8 @@ import { AlertController } from '@ionic/angular';
 import { ShoppingListModel } from './model/shoppingListModel';
 import { MyData } from './my-data';
 import { Observable, of } from 'rxjs';
+import { Item } from './model/item';
+import { Md5 } from 'ts-md5/dist/md5';
 
 
 @Injectable({
@@ -21,7 +23,7 @@ export class ShoppingListService {
 
   private shoppingLists: ShoppingListModel[];
 
-  constructor(private alertController: AlertController) {
+  constructor(private alertController: AlertController, private md5: Md5) {
     console.log('Loading shopping list from my-data bootstrap class');
     this.shoppingLists = this.myData.getShoppingLists();
   }
@@ -30,8 +32,8 @@ export class ShoppingListService {
     return this.shoppingLists.slice();
   }
 
-  public getShoppingListByName(name: string): Observable<ShoppingListModel> {
-    return of(this.shoppingLists.find(sl => sl.name === name));
+  public getShoppingListById(id: string): Observable<ShoppingListModel> {
+    return of(this.shoppingLists.find(sl => sl.id === id));
   }
 
   public deleteShoppingList(list: ShoppingListModel) {
@@ -44,39 +46,46 @@ export class ShoppingListService {
     return this.LIST_NAME + ' ' + dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString();
   }
 
-  validateShoppingList(sl: ShoppingListModel) {
-    if (sl.name === '' || sl.name === null) {
+  validateShoppingList(name: string, items: Item[]) {
+    if (name === '' || name === null) {
       this.presentAlert('Empty Name', 'Shopping list name is mandatory');
       return false;
     }
 
-    if (sl.items === null || sl.items.length === 0) {
+    if (items === null || items.length === 0) {
       this.presentAlert('Empty Items', 'Add at least one product to the shopping list');
       return false;
     }
     return true;
   }
 
-  checkNotAlreadyCreated(sl: ShoppingListModel) {
-    this.shoppingLists.forEach((element, index) => {
-      if (element.equals(sl)) {
-        this.presentAlert('Already Created', 'Shopping list already created.');
-        return false;
-      }
-    });
-    return true;
-  }
+  // checkNotAlreadyCreated(name: string) {
+  //   this.shoppingLists.forEach((element, index) => {
+  //     if (element.name === name) {
+  //       this.presentAlert('Already Created', 'Shopping list with name \"' + name + '\" already created.');
+  //       return false;
+  //     }
+  //   });
+  //   return true;
+  // }
 
-  public createNewShoppingList(newList: ShoppingListModel) {
-    if (this.validateShoppingList(newList) && this.checkNotAlreadyCreated(newList)) {
-      this.shoppingLists.push(newList);
+  public createNewShoppingList(shoppingListName: string, items: Item[]) {
+    if (this.validateShoppingList(shoppingListName, items)) {
+      this.shoppingLists.push(this.newShoppingList(shoppingListName, items));
+      this.listsChanged.emit(this.shoppingLists.slice());
       return true;
     }
     return false;
   }
 
+  private newShoppingList(name: string, items: Item[]) {
+    const sl: ShoppingListModel = new ShoppingListModel(Md5.hashStr(new Date().toString()).toString(), name, items);
+    console.log(sl);
+    return sl;
+  }
+
   public updateShoppingList(l: ShoppingListModel) {
-    if (this.validateShoppingList(l)) {
+    if (this.validateShoppingList(l.name, l.items)) {
       // this.shoppingLists.find(sh) by name
     }
   }

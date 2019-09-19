@@ -1,13 +1,8 @@
 import { Item } from './item';
 
 export class ShoppingListModel {
-    public name: string;
 
-    public items: Item[];
-
-    constructor(name: string, items: Item[]) {
-        this.name = name;
-        this.items = items;
+    constructor(public id: string, public name: string, public items: Item[]) {
     }
 
     public equals(slm: ShoppingListModel) {

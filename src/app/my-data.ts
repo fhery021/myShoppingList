@@ -20,8 +20,8 @@ export class MyData {
     private list2: ShoppingListModel;
 
     constructor() {
-        this.list1 = new ShoppingListModel('By these from Penny\'s Market', this.items1);
-        this.list2 = new ShoppingListModel('Dedeman list', this.items2);
+        this.list1 = new ShoppingListModel('1', 'Penny\'s Market', this.items1);
+        this.list2 = new ShoppingListModel('2', 'Dedeman list', this.items2);
 
         this.shoppingLists.push(this.list1);
         this.shoppingLists.push(this.list2);

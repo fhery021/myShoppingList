@@ -56,7 +56,8 @@ export class CreatePage implements OnInit {
   }
 
   onSaveShoppingList() {
-    if (this.shoppingListService.createNewShoppingList(new ShoppingListModel(this.shoppingListName, this.items))) {
+    // if (this.shoppingListService.createNewShoppingList(new ShoppingListModel(this.shoppingListName, this.items))) {
+    if (this.shoppingListService.createNewShoppingList(this.shoppingListName, this.items)) {
       this.clear();
       this.router.navigate(['/list']);
     }
