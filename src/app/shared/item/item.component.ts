@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { Item } from 'src/app/model/item';
 import { ItemService } from './item.service';
-import { Md5 } from 'ts-md5/dist/md5';
 import { ItemEvent } from 'src/app/model/ItemEvent';
 
 @Component({

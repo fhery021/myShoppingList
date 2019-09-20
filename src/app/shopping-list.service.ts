@@ -85,7 +85,7 @@ export class ShoppingListService {
   }
 
   public updateShoppingListItem(shoppingListId: string, item: Item): void {
-    const slIndex = this.shoppingLists.findIndex(sl => sl.id === shoppingListId);
+    const slIndex = this.findShoppingListIndex(shoppingListId);
     if (slIndex !== -1) {
       const itemIndex = this.shoppingLists[slIndex].items.findIndex(i => i.id === item.id);
       if (itemIndex !== -1) {
@@ -95,13 +95,24 @@ export class ShoppingListService {
   }
 
   public deleteShoppingListItem(shoppingListId: string, item: Item): void {
-    const slIndex = this.shoppingLists.findIndex(sl => sl.id === shoppingListId);
+    const slIndex = this.findShoppingListIndex(shoppingListId);
     if (slIndex !== -1) {
       const itemIndex = this.shoppingLists[slIndex].items.findIndex(i => i.id === item.id);
       if (itemIndex !== -1) {
         this.shoppingLists[slIndex].items.splice(itemIndex, 1);
       }
     }
+  }
+
+  public addShoppingListItem(shoppingListId: string, newItem: Item): void {
+    const slIndex = this.findShoppingListIndex(shoppingListId);
+    if (slIndex !== -1) {
+      this.shoppingLists[slIndex].items.push(newItem);
+    }
+  }
+
+  private findShoppingListIndex(id: string): number {
+    return this.shoppingLists.findIndex(sl => sl.id === id);
   }
 
   public async presentAlert(msgHeader: string, msgContent: string) {

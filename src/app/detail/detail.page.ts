@@ -5,6 +5,8 @@ import { ShoppingListService } from '../shopping-list.service';
 import { ShoppingListModel } from '../model/shoppingListModel';
 import { ItemService } from '../shared/item/item.service';
 import { ItemEvent } from '../model/ItemEvent';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-detail',
@@ -16,12 +18,31 @@ export class DetailPage implements OnInit {
   pageName = 'detail';
   shoppingList: ShoppingListModel;
 
+  createForm: FormGroup;
+
+  showAddItemForm = false;
+
+  newItem: {
+    product: string;
+    quantity: number;
+    unit: string;
+    notes: string
+  };
+
   constructor(
     private route: ActivatedRoute,
     private shoppingListService: ShoppingListService,
     private location: Location,
-    private itemService: ItemService
-  ) { }
+    private itemService: ItemService,
+    private formBuilder: FormBuilder,
+  ) {
+    this.createForm = this.formBuilder.group({
+      product: ['', Validators.required],
+      quantity: [''],
+      unit: [''],
+      notes: ['']
+    });
+  }
 
   ngOnInit() {
     this.getShoppingList();
@@ -60,4 +81,25 @@ export class DetailPage implements OnInit {
       this.shoppingListService.deleteShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
     }
   }
+
+  onSubmitAddItem() {
+    console.log('add item pressed');
+    this.newItem = this.createForm.value;
+    if (this.newItem.product === null || this.newItem.product === '') {
+      this.shoppingListService.presentAlert('Empty Product', 'Product name is mandatory!');
+    } else {
+      this.shoppingListService.addShoppingListItem(
+        this.shoppingList.id,
+        this.itemService
+          .newItem(this.newItem.product, this.newItem.quantity, this.newItem.unit, this.newItem.notes, false));
+
+      this.toggleAddForm();
+    }
+  }
+
+  toggleAddForm(): void {
+    this.createForm.reset();
+    this.showAddItemForm = !this.showAddItemForm;
+  }
+
 }
