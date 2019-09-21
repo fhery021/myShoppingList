@@ -4,19 +4,23 @@
 
 --     --  constructor(public id: string, public name: string, public items: Item[]) {
 
-CREATE TABLE IF NOT EXISTS Items(
+CREATE TABLE
+IF NOT EXISTS Items
+(
     ItemId INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     quantity INTEGER,
     unit TEXT,
     notes TEXT,
-    isShopped INTEGER
+    isShopped INTEGER,
+    shoppingListId INTEGER
 )
 
-CREATE TABLE IF NOT EXISTS shoppingLists(
+CREATE TABLE
+IF NOT EXISTS shoppingLists
+(
     id INTEGER  PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    FOREIGN KEY(ItemId) REFERENCES Items(ItemId)
+    name TEXT
 )
 
 -- CREATE TABLE Artists(
