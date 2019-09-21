@@ -1,7 +1,6 @@
 import { Injectable, OnInit, EventEmitter } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, Platform, ToastController } from '@ionic/angular';
 import { ShoppingListModel } from './model/shoppingListModel';
-import { MyData } from './my-data';
 import { Observable, of } from 'rxjs';
 import { Item } from './model/item';
 import { Md5 } from 'ts-md5/dist/md5';
@@ -17,15 +16,27 @@ export class ShoppingListService {
 
   public listsChanged = new EventEmitter<ShoppingListModel[]>();
 
-  private myData: MyData = new MyData();
-
   // listChanged = new EventEmitter<ShoppingListModel>();
 
   private shoppingLists: ShoppingListModel[];
 
-  constructor(private alertController: AlertController, private md5: Md5) {
-    console.log('Loading shopping list from my-data bootstrap class');
-    this.shoppingLists = this.myData.getShoppingLists();
+  constructor(
+    private alertController: AlertController,
+    private md5: Md5,
+    private plt: Platform,
+    private storageService: StorageService,
+    private toastController: ToastController) {
+
+    this.plt.ready().then(() => {
+      this.loadShoppingLists();
+    });
+  }
+
+  // READ
+  private loadShoppingLists() {
+    this.storageService.getShoppingLists().then(lists => {
+      this.shoppingLists = lists;
+    });
   }
 
   public getShoppingLists() {
@@ -36,17 +47,82 @@ export class ShoppingListService {
     return of(this.shoppingLists.find(sl => sl.id === id));
   }
 
-  public deleteShoppingList(list: ShoppingListModel) {
-    this.shoppingLists.splice(this.shoppingLists.indexOf(list), 1);
-    this.listsChanged.emit(this.shoppingLists.slice());
+  // CREATE
+  public createNewShoppingList(shoppingListName: string, items: Item[]) {
+    if (this.validateShoppingList(shoppingListName, items)) {
+      this.storageService
+        .addNewShoppingList(
+          new ShoppingListModel(Md5.hashStr(new Date().toString()).toString(), shoppingListName, items));
+      this.loadShoppingLists();
+      this.listsChanged.emit(this.shoppingLists.slice());
+
+      return true;
+    }
+    return false;
   }
 
+  // UPDATE
+  public updateShoppingList(sl: ShoppingListModel) {
+    this.storageService.updateShoppingList(sl).then(() => {
+      this.loadShoppingLists();
+      this.listsChanged.emit(this.shoppingLists.slice());
+    });
+  }
+
+  // DELETE
+  public deleteShoppingList(list: ShoppingListModel) {
+    this.storageService.deleteShoppingList(list).then(sl => {
+      this.loadShoppingLists();
+      this.listsChanged.emit(this.shoppingLists.slice());
+    });
+  }
+
+
+  // ITEM RELATED
+  public updateShoppingListItem(shoppingListId: string, item: Item): void {
+    const slIndex = this.findShoppingListIndex(shoppingListId);
+    if (slIndex !== -1) {
+      // const itemIndex = this.shoppingLists[slIndex].items.findIndex(i => i.id === item.id);
+      // if (itemIndex !== -1) {
+      //   this.shoppingLists[slIndex].items[itemIndex] = item;
+      // }
+      this.storageService.updateShoppingList(this.shoppingLists[slIndex]);
+      this.loadShoppingLists();
+      this.showToast('Item updated');
+    }
+  }
+
+  public deleteShoppingListItem(shoppingListId: string, item: Item): void {
+    const slIndex = this.findShoppingListIndex(shoppingListId);
+    if (slIndex !== -1) {
+      // const itemIndex = this.shoppingLists[slIndex].items.findIndex(i => i.id === item.id);
+      // if (itemIndex !== -1) {
+      //   this.shoppingLists[slIndex].items.splice(itemIndex, 1);
+      // }
+      this.storageService.updateShoppingList(this.shoppingLists[slIndex]);
+      this.loadShoppingLists();
+      this.showToast('Item deleted');
+    }
+  }
+
+  public addShoppingListItem(shoppingListId: string, newItem: Item): void {
+    const slIndex = this.findShoppingListIndex(shoppingListId);
+    if (slIndex !== -1) {
+      // this.shoppingLists[slIndex].items.push(newItem);
+      this.storageService.updateShoppingList(this.shoppingLists[slIndex]);
+      this.loadShoppingLists();
+      this.showToast('Item added');
+    }
+  }
+
+
+  // UTILS -- future improvement to move in some helper class (?)
   public generateShoppingListName() {
     const dateTime = new Date();
     return this.LIST_NAME + ' ' + dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString();
   }
 
-  validateShoppingList(name: string, items: Item[]) {
+  private validateShoppingList(name: string, items: Item[]) {
     if (name === '' || name === null) {
       this.presentAlert('Empty Name', 'Shopping list name is mandatory');
       return false;
@@ -57,58 +133,6 @@ export class ShoppingListService {
       return false;
     }
     return true;
-  }
-
-  // checkNotAlreadyCreated(name: string) {
-  //   this.shoppingLists.forEach((element, index) => {
-  //     if (element.name === name) {
-  //       this.presentAlert('Already Created', 'Shopping list with name \"' + name + '\" already created.');
-  //       return false;
-  //     }
-  //   });
-  //   return true;
-  // }
-
-  public createNewShoppingList(shoppingListName: string, items: Item[]) {
-    if (this.validateShoppingList(shoppingListName, items)) {
-      this.shoppingLists.push(this.newShoppingList(shoppingListName, items));
-      this.listsChanged.emit(this.shoppingLists.slice());
-      return true;
-    }
-    return false;
-  }
-
-  private newShoppingList(name: string, items: Item[]) {
-    const sl: ShoppingListModel = new ShoppingListModel(Md5.hashStr(new Date().toString()).toString(), name, items);
-    console.log(sl);
-    return sl;
-  }
-
-  public updateShoppingListItem(shoppingListId: string, item: Item): void {
-    const slIndex = this.findShoppingListIndex(shoppingListId);
-    if (slIndex !== -1) {
-      const itemIndex = this.shoppingLists[slIndex].items.findIndex(i => i.id === item.id);
-      if (itemIndex !== -1) {
-        this.shoppingLists[slIndex].items[itemIndex] = item;
-      }
-    }
-  }
-
-  public deleteShoppingListItem(shoppingListId: string, item: Item): void {
-    const slIndex = this.findShoppingListIndex(shoppingListId);
-    if (slIndex !== -1) {
-      const itemIndex = this.shoppingLists[slIndex].items.findIndex(i => i.id === item.id);
-      if (itemIndex !== -1) {
-        this.shoppingLists[slIndex].items.splice(itemIndex, 1);
-      }
-    }
-  }
-
-  public addShoppingListItem(shoppingListId: string, newItem: Item): void {
-    const slIndex = this.findShoppingListIndex(shoppingListId);
-    if (slIndex !== -1) {
-      this.shoppingLists[slIndex].items.push(newItem);
-    }
   }
 
   private findShoppingListIndex(id: string): number {
@@ -125,4 +149,10 @@ export class ShoppingListService {
     await alert.present();
   }
 
+  public async showToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 2000
+    });
+  }
 }

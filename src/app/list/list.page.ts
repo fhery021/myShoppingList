@@ -29,7 +29,4 @@ export class ListPage implements OnInit {
     this.shoppingListService.deleteShoppingList(shl);
   }
 
-  public onClickShoppingList(sl: ShoppingListModel) {
-    
-  }
 }

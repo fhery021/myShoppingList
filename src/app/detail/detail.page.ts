@@ -45,7 +45,11 @@ export class DetailPage implements OnInit {
   }
 
   ngOnInit() {
-    this.getShoppingList();
+    const id = this.route.snapshot.paramMap.get('id');
+
+    this.shoppingListService.getShoppingListById(id)
+      .subscribe(sl => this.shoppingList = sl);
+
     this.itemService.itemChanged
       .subscribe(
         (changedItem: ItemEvent) => {
@@ -58,12 +62,12 @@ export class DetailPage implements OnInit {
           this.deleteItem(deletedItem);
         }
       );
-  }
-
-  private getShoppingList(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.shoppingListService.getShoppingListById(id)
-      .subscribe(sl => this.shoppingList = sl);
+    this.shoppingListService.listsChanged
+      .subscribe(
+        () => {
+          this.shoppingListService.getShoppingListById(id)
+            .subscribe(sl => this.shoppingList = sl);
+        });
   }
 
   goBack(): void {
