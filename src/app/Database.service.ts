@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Platform } from '@ionic/angular';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { HttpClient } from '@angular/common/http';
+import { Item } from './model/item';
 
 const KEY = 'my-shopping-lists';
 
@@ -66,84 +67,45 @@ export class DatabaseService {
     return this.shoppingLists.asObservable();
   }
 
-  getItems() {
-    return this.items.asObservable();
-  }
 
-  loadShoppingLists() {
-    return this.database.executeSql('SELECT * FROM shoppingLists', [])
+  // public id: string,
+  // public name: string,
+  // public quantity: number,
+  // public unit: string,
+  // public notes: string,
+  // public isShopped: boolean
+
+  // itemId INTEGER PRIMARY KEY AUTOINCREMENT,
+  // name TEXT,
+  // quantity INTEGER,
+  // unit TEXT,
+  // isShopped INTEGER,
+  // notes TEXT,
+  // shoppingListId INTEGER
+
+  // load shopping items
+  loadItems() {
+    return this.database.executeSql('SELECT item.itemId, ' +
+      'item.name, item.quantity, item.unit, item.isShopped, item.notes ' +
+      'AS shlist' +
+      'FROM items JOIN shoppingLists ON items.shoppingListId = shoppingLists.id', [])
       .then(data => {
-        const dbShoppingLists: DBShoppingList[] = [];
+        const dbItems: Item[] = [];
+
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
-            dbShoppingLists.push({
-              id: data.rows.item(i).id,
-              name: data.rows.item(i).name
+            dbItems.push({
+              id: data.rows.item(i).itemId,
+              name: data.rows.item(i).name,
+              quantity: data.rows.item(i).quantity,
+              unit: data.rows.item(i).unit,
+              notes: data.rows.item(i).notes,
+              isShopped: data.rows.item(i).isShopped === 1 ? true : false
             });
           }
         }
-        this.shoppingLists.next(dbShoppingLists);
+        this.items.next(dbItems);
       });
-  }
-// TODO https://devdactic.com/ionic-4-sqlite-queries/ line 24 at the second part of database service
-  loadItems() {
-
-  }
-
-  // CREATE
-  addNewShoppingList(sl: ShoppingListModel): Promise<any> {
-    return this.storage.get(KEY).then((lists: ShoppingListModel[]) => {
-      if (lists) {
-        lists.push(sl);
-        return this.storage.set(KEY, lists);
-      } else {
-        return this.storage.set(KEY, [lists]);
-      }
-    });
-  }
-
-  // READ
-  // getShoppingLists(): Promise<ShoppingListModel[]> {
-  //   return this.storage.get(KEY);
-  // }
-
-  // UPDATE
-  public updateShoppingList(sl: ShoppingListModel): Promise<any> {
-    return this.storage.get(KEY).then((lists: ShoppingListModel[]) => {
-      if (!lists || lists.length === 0) {
-        return null;
-      }
-
-      let newShoppingList: ShoppingListModel[] = [];
-
-      for (let i of lists) {
-        if (i.id === sl.id) {
-          newShoppingList.push(sl);
-        } else {
-          newShoppingList.push(i);
-        }
-      }
-
-      return this.storage.set(KEY, newShoppingList);
-    });
-  }
-
-  // DELETE
-  deleteShoppingList(sl: ShoppingListModel): Promise<any> {
-    return this.storage.get(KEY).then((lists: ShoppingListModel[]) => {
-      if (!lists || lists.length === 0) {
-        return null;
-      }
-
-      let toKeep: ShoppingListModel[] = [];
-
-      for (let i of lists) {
-        if (i.id !== sl.id) {
-          toKeep.push(i);
-        }
-      }
-      return this.storage.set(KEY, toKeep);
-    });
   }
 
 }
