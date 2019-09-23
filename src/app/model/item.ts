@@ -1,7 +1,8 @@
 export class Item {
 
+    public id: number;
+
     constructor(
-        public id: string,
         public name: string,
         public quantity: number,
         public unit: string,

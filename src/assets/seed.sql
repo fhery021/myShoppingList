@@ -1,13 +1,13 @@
 -- CREATE TABLE IF NOT EXISTS developer(
-    -- id INTEGER PRIMARY KEY AUTOINCREMENT,
-    -- name TEXT,
-    -- skills TEXT,
-    -- img TEXT);
+-- id INTEGER PRIMARY KEY AUTOINCREMENT,
+-- name TEXT,
+-- skills TEXT,
+-- img TEXT);
 
 -- CREATE TABLE IF NOT EXISTS product(
-    -- id INTEGER PRIMARY KEY AUTOINCREMENT,
-    -- name TEXT,
-    -- creatorId INTEGER);
+-- id INTEGER PRIMARY KEY AUTOINCREMENT,
+-- name TEXT,
+-- creatorId INTEGER);
 
 
 CREATE TABLE
