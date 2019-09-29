@@ -1,7 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Item } from 'src/app/model/item';
-import { Md5 } from 'ts-md5/dist/md5';
 import { ItemEvent } from 'src/app/model/ItemEvent';
+import { DatabaseService } from 'src/app/Database.service';
+import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,20 @@ export class ItemService {
 
   private pageName: string;
 
-  constructor(private md5: Md5) { }
+  constructor(
+    private plt: Platform,
+    private db: DatabaseService) {
+    this.plt.ready().then(() => {
+      this.loadItems();
+    });
+  }
+
+  private loadItems() {
+    
+  }
 
   public newItem(product: string, quantity: number, unit: string, notes: string, isShopped: boolean) {
-    const item: Item = new Item(Md5.hashStr(new Date().toString()).toString(), product, quantity, unit, notes, isShopped);
+    const item: Item = new Item(product, quantity, unit, notes, isShopped);
     console.log(item);
     return item;
   }

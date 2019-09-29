@@ -3,32 +3,44 @@ import { AlertController, Platform, ToastController } from '@ionic/angular';
 import { ShoppingListModel } from './model/shoppingListModel';
 import { Observable, of } from 'rxjs';
 import { Item } from './model/item';
-import { Md5 } from 'ts-md5/dist/md5';
+import { DatabaseService } from './Database.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class ShoppingListService {
+export class ShoppingListService implements OnInit {
 
 
   private LIST_NAME = 'New List';
 
   public listsChanged = new EventEmitter<ShoppingListModel[]>();
 
-  // listChanged = new EventEmitter<ShoppingListModel>();
-
-  private shoppingLists: ShoppingListModel[];
+  private shoppingLists: Observable<ShoppingListModel[]>;
+  private items: Item[] = [];
 
   constructor(
     private alertController: AlertController,
-    private md5: Md5,
     private plt: Platform,
-    private storageService: StorageService,
-    private toastController: ToastController) {
+    private toastController: ToastController,
+    private db: DatabaseService) {
 
     this.plt.ready().then(() => {
       this.loadShoppingLists();
+    });
+  }
+
+  ngOnInit(): void {
+
+    // ITT !!!!! szetvalasztani ezt: sl. service es item service-be:
+
+    this.db.getDatabaseState().subscribe(rdy => {
+      if (rdy) {
+        this.db.getItems().subscribe(items => {
+          this.items = items;
+        });
+        this.shoppingLists = this.db.getShoppingLists();
+      }
     });
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ShoppingListModel } from './model/shoppingListModel';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite/ngx';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Platform } from '@ionic/angular';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { HttpClient } from '@angular/common/http';
@@ -63,8 +63,12 @@ export class DatabaseService {
     return this.dbReady.asObservable();
   }
 
-  getShoppingLists() {
+  getShoppingLists(): Observable<ShoppingListModel[]>{
     return this.shoppingLists.asObservable();
+  }
+
+  getItems(): Observable<Item[]>{
+    return this.items.asObservable();
   }
 
   // load shopping items
