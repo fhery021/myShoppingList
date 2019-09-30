@@ -178,7 +178,7 @@ export class DatabaseService {
     // insert shopping list, then add items
     const sl = [shoppingListName];
     let slId = 0;
-    this.database.executeSql('INSERT INTO shoppingLists name VALUES (?)', sl)
+    return this.database.executeSql('INSERT INTO shoppingLists name VALUES (?)', sl)
       .then(data => {
         slId = data.id;
         // this.loadItems();
@@ -201,9 +201,10 @@ export class DatabaseService {
   }
 
   updateShoppingList(shoppingListId: number, shoppingListName: string, items: Item[]) {
-    this.database.executeSql('UPDATE shoppingLists SET name = ${shoppingListName} WHERE id = ${shoppingListId}');
-    items.forEach(item => {
-      this.updateItem(item, shoppingListId);
+    return this.database.executeSql('UPDATE shoppingLists SET name = ${shoppingListName} WHERE id = ${shoppingListId}').then(_ => {
+      items.forEach(item => {
+        this.updateItem(item, shoppingListId);
+      });
     });
     // TODO catch stuff here!
   }
