@@ -9,11 +9,10 @@
 -- name TEXT,
 -- creatorId INTEGER);
 
-
-CREATE TABLE
-IF NOT EXISTS items
+--  java.sql.SQLException: sqlite3_prepare_v2 failure: near "name": syntax error
+CREATE TABLE items
 (
-    itemId INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
     shoppingListId INTEGER,
     name TEXT,
     quantity INTEGER,
@@ -22,10 +21,9 @@ IF NOT EXISTS items
     notes TEXT    
 )
 
-CREATE TABLE
-IF NOT EXISTS shoppingLists
+CREATE TABLE shoppingLists
 (
-    id INTEGER  PRIMARY KEY AUTOINCREMENT,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT
 )
 

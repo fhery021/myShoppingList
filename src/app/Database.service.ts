@@ -77,14 +77,14 @@ export class DatabaseService {
       'item.shoppingListId' +
       'item.name, item.quantity, item.unit, item.isShopped, item.notes ' +
       'AS shlist' +
-      'FROM items JOIN shoppingLists ON items.shoppingListId = shoppingLists.id', [])
+      'FROM items JOIN shoppingLists ON items.ID = shoppingLists.ID', [])
       .then(data => {
         const dbItems: Item[] = [];
 
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
             dbItems.push({
-              id: data.rows.item(i).itemId,
+              id: data.rows.item(i).ID,
               shoppingListId: data.rows.item(i).shoppingListId,
               name: data.rows.item(i).name,
               quantity: data.rows.item(i).quantity,
@@ -180,7 +180,7 @@ export class DatabaseService {
     let slId = 0;
     return this.database.executeSql('INSERT INTO shoppingLists name VALUES (?)', sl)
       .then(data => {
-        slId = data.id;
+        slId = data.shoppingListId;
         // this.loadItems();
         items.forEach(i => {
           this.addItem(i, slId);

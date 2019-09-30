@@ -28,6 +28,7 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^4.7.1",
     "cordova-android": "^8.0.0",
+    "cordova-browser": "^6.0.0",
     "cordova-plugin-appminimize": "^1.0.1",
     "core-js": "^2.5.4",
     "ionic-angular": "^3.9.8",
@@ -85,7 +86,8 @@
       "uk.co.workingedge.cordova.plugin.sqliteporter": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "browser"
     ]
   }
 }
