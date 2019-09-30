@@ -1,7 +1,8 @@
 import { Injectable, OnInit, EventEmitter } from '@angular/core';
 import { AlertController, Platform, ToastController } from '@ionic/angular';
 import { ShoppingListModel } from './model/shoppingListModel';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { Item } from './model/item';
 import { DatabaseService } from './Database.service';
 
@@ -16,7 +17,7 @@ export class ShoppingListService implements OnInit {
 
   public listsChanged = new EventEmitter<ShoppingListModel[]>();
 
-  private shoppingLists: Observable<ShoppingListModel[]>;
+  private shoppingLists: ShoppingListModel[];
   private items: Item[] = [];
 
   constructor(
@@ -30,33 +31,21 @@ export class ShoppingListService implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-
-    // ITT !!!!! szetvalasztani ezt: sl. service es item service-be:
-
+  // READ
+  private loadShoppingLists() {
     this.db.getDatabaseState().subscribe(rdy => {
       if (rdy) {
-        this.db.getItems().subscribe(items => {
-          this.items = items;
-        });
-        this.shoppingLists = this.db.getShoppingLists();
+        this.db.getShoppingLists().subscribe(sl => this.shoppingLists = sl);
       }
     });
   }
 
-  // READ
-  private loadShoppingLists() {
-    this.storageService.getShoppingLists().then(lists => {
-      this.shoppingLists = lists;
-    });
+  public getShoppingLists(): ShoppingListModel[] {
+    return this.shoppingLists;
   }
 
-  public getShoppingLists() {
-    return this.shoppingLists.slice();
-  }
-
-  public getShoppingListById(id: string): Observable<ShoppingListModel> {
-    return of(this.shoppingLists.find(sl => sl.id === id));
+  public getShoppingListById(id: number): ShoppingListModel {
+    return this.shoppingLists.find(sl => sl.id === id);
   }
 
   // CREATE

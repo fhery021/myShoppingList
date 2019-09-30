@@ -14,6 +14,8 @@ export class ItemService {
 
   private pageName: string;
 
+  private items: Item[] = [];
+
   constructor(
     private plt: Platform,
     private db: DatabaseService) {
@@ -23,7 +25,14 @@ export class ItemService {
   }
 
   private loadItems() {
-    
+    this.db.getDatabaseState().subscribe(rdy => {
+      if (rdy) {
+        this.db.getItems().subscribe(items => {
+          this.items = items;
+        });
+      }
+    });
+
   }
 
   public newItem(product: string, quantity: number, unit: string, notes: string, isShopped: boolean) {

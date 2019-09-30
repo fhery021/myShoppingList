@@ -14,12 +14,12 @@ CREATE TABLE
 IF NOT EXISTS items
 (
     itemId INTEGER PRIMARY KEY AUTOINCREMENT,
+    shoppingListId INTEGER,
     name TEXT,
     quantity INTEGER,
     unit TEXT,
     isShopped INTEGER,
-    notes TEXT,
-    shoppingListId INTEGER
+    notes TEXT    
 )
 
 CREATE TABLE

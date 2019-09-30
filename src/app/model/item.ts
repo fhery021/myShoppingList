@@ -1,6 +1,7 @@
 export class Item {
 
     public id: number;
+    public shoppingListId: number;
 
     constructor(
         public name: string,

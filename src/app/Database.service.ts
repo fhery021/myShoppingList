@@ -63,17 +63,18 @@ export class DatabaseService {
     return this.dbReady.asObservable();
   }
 
-  getShoppingLists(): Observable<ShoppingListModel[]>{
+  getShoppingLists(): Observable<ShoppingListModel[]> {
     return this.shoppingLists.asObservable();
   }
 
-  getItems(): Observable<Item[]>{
+  getItems(): Observable<Item[]> {
     return this.items.asObservable();
   }
 
   // load shopping items
   loadItems() {
     return this.database.executeSql('SELECT item.itemId, ' +
+      'item.shoppingListId' +
       'item.name, item.quantity, item.unit, item.isShopped, item.notes ' +
       'AS shlist' +
       'FROM items JOIN shoppingLists ON items.shoppingListId = shoppingLists.id', [])
@@ -84,6 +85,7 @@ export class DatabaseService {
           for (let i = 0; i < data.rows.length; i++) {
             dbItems.push({
               id: data.rows.item(i).itemId,
+              shoppingListId: data.rows.item(i).shoppingListId,
               name: data.rows.item(i).name,
               quantity: data.rows.item(i).quantity,
               unit: data.rows.item(i).unit,
@@ -98,10 +100,10 @@ export class DatabaseService {
 
   // TODO converter for dbItem-Item ? (?)
   addItem(newItem: Item, shoppingListId: number) {
-    const dbItem = [newItem.name, newItem.quantity, newItem.unit, newItem.isShopped === true ? 1 : 0, newItem.notes, shoppingListId];
+    const dbItem = [shoppingListId, newItem.name, newItem.quantity, newItem.unit, newItem.isShopped === true ? 1 : 0, newItem.notes];
     return this.database
       .executeSql('INSERT INTO items ' +
-        'name, quantity, unit, isShopped, notes, shoppingListId ' +
+        'shoppingListId, name, quantity, unit, isShopped, notes ' +
         'VALUES (?, ?, ?, ?, ?, ?)', dbItem)
       .then(data => {
         this.loadItems();
