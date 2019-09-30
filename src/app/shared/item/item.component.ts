@@ -12,7 +12,7 @@ export class ItemComponent implements OnInit {
 
   @Input() item: Item;
   @Input() pageName: string;
-  @Input() shoppingListId: string;
+  @Input() shoppingListId: number;
 
   editMode = false;
 

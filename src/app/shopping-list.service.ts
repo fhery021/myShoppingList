@@ -3,6 +3,7 @@ import { AlertController, Platform, ToastController } from '@ionic/angular';
 import { ShoppingListModel } from './model/shoppingListModel';
 import { Item } from './model/item';
 import { DatabaseService } from './Database.service';
+import { Observable, of } from 'rxjs';
 
 
 @Injectable({
@@ -41,8 +42,8 @@ export class ShoppingListService {
     return this.shoppingLists;
   }
 
-  public getShoppingListById(id: number): ShoppingListModel {
-    return this.shoppingLists.find(sl => sl.id === id);
+  public getShoppingListById(id: number): Observable<ShoppingListModel> {
+    return of(this.shoppingLists.find(sl => sl.id === id));
   }
 
   // CREATE
