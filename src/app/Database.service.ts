@@ -11,7 +11,7 @@ const KEY = 'my-shopping-lists';
 
 export interface DBItem {
   itemId: number;
-  name: string;
+  itemName: string;
   quantity: number;
   unit: string;
   notes: string;
@@ -20,7 +20,7 @@ export interface DBItem {
 
 export interface DBShoppingList {
   id: number;
-  name: string;
+  listName: string;
 }
 
 @Injectable({
@@ -47,8 +47,10 @@ export class DatabaseService {
   }
 
   private seedDatabase() {
+    console.log('seed database');
     this.http.get('assets/seed.sql', { responseType: 'text' })
       .subscribe(sql => {
+        console.log('seed database: sql=' + sql);
         this.sqlitePorter.importSqlToDb(this.database, sql)
           .then(_ => {
             this.loadShoppingLists();
@@ -57,6 +59,7 @@ export class DatabaseService {
           })
           .catch(e => console.error(e));
       });
+    console.log('seed database done');
   }
 
   getDatabaseState() {
@@ -72,25 +75,27 @@ export class DatabaseService {
   }
 
   // load shopping items
+  // select items.id, items.shoppingListId, items.itemName, items.quantity, items.isShopped, items.notes
+  // FROM items JOIN shoppingLists ON items.shoppingListId = shoppingLists.id
   loadItems() {
-    return this.database.executeSql('SELECT item.itemId, ' +
-      'item.shoppingListId' +
-      'item.name, item.quantity, item.unit, item.isShopped, item.notes ' +
-      'AS shlist' +
-      'FROM items JOIN shoppingLists ON items.ID = shoppingLists.ID', [])
+    console.log('load items');
+    return this.database.executeSql('SELECT items.id, ' +
+      'items.shoppingListId, ' +
+      'items.itemName, items.quantity, items.isShopped, items.unit, items.notes ' +
+      'FROM items JOIN shoppingLists ON items.shoppingListId = shoppingLists.id', [])
       .then(data => {
         const dbItems: Item[] = [];
 
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
             dbItems.push({
-              id: data.rows.item(i).ID,
+              id: data.rows.item(i).id,
               shoppingListId: data.rows.item(i).shoppingListId,
-              name: data.rows.item(i).name,
+              name: data.rows.item(i).itemName,
               quantity: data.rows.item(i).quantity,
+              isShopped: data.rows.item(i).isShopped === 1 ? true : false,
               unit: data.rows.item(i).unit,
-              notes: data.rows.item(i).notes,
-              isShopped: data.rows.item(i).isShopped === 1 ? true : false
+              notes: data.rows.item(i).notes
             });
           }
         }
@@ -98,44 +103,23 @@ export class DatabaseService {
       });
   }
 
-  // TODO converter for dbItem-Item ? (?)
   addItem(newItem: Item, shoppingListId: number) {
+    console.log('add item ' + newItem + 'shoppingListId ' + shoppingListId);
     const dbItem = [shoppingListId, newItem.name, newItem.quantity, newItem.unit, newItem.isShopped === true ? 1 : 0, newItem.notes];
+    console.log('dbItem== ' + dbItem);
     return this.database
       .executeSql('INSERT INTO items ' +
-        'shoppingListId, name, quantity, unit, isShopped, notes ' +
+        '(shoppingListId, itemName, quantity, unit, isShopped, notes) ' +
         'VALUES (?, ?, ?, ?, ?, ?)', dbItem)
-      .then(data => {
+      .then(i => {
+        console.log('i= ' + i);
         this.loadItems();
       });
   }
 
-  // getItemsByShoppingListId(shoppingListId: number) {
-  //   return this.database.executeSql('SELECT item.itemId, ' +
-  //     'item.name, item.quantity, item.unit, item.isShopped, item.notes ' +
-  //     'AS shlist' +
-  //     'FROM items JOIN shoppingLists ON items.shoppingListId = shoppingLists.id ' +
-  //     'WHERE item.shoppshoppingListId = ?', [shoppingListId])
-  //     .then(data => {
-  //       const dbItems: Item[] = [];
-
-  //       if (data.rows.length > 0) {
-  //         for (let i = 0; i < data.rows.length; i++) {
-  //           dbItems.push({
-  //             id: data.rows.item(i).itemId,
-  //             name: data.rows.item(i).name,
-  //             quantity: data.rows.item(i).quantity,
-  //             unit: data.rows.item(i).unit,
-  //             notes: data.rows.item(i).notes,
-  //             isShopped: data.rows.item(i).isShopped === 1 ? true : false
-  //           });
-  //         }
-  //       }
-  //     });
-  // }
 
   deleteItem(itemId: number, shoppingListId: number) {
-    return this.database.executeSql('DELETE FROM items WHERE itemId = ? AND shoppingListId = ?', [itemId, shoppingListId])
+    return this.database.executeSql('DELETE FROM items WHERE ID = ? AND shoppingListId = ?', [itemId, shoppingListId])
       .then(_ => {
         this.loadItems();
         // this.loadShoppingLists(); ??
@@ -145,7 +129,7 @@ export class DatabaseService {
   updateItem(item: Item, shoppingListId: number) {
     const dbItem = [item.name, item.quantity, item.unit, item.isShopped === true ? 1 : 0, item.notes, shoppingListId];
     return this.database.executeSql('UPDATE items ' +
-      'SET name = ?, quantity = ?, unit = ?, isShopped = ?, notes = ? ' +
+      'SET itemName = ?, quantity = ?, unit = ?, isShopped = ?, notes = ? ' +
       'WHERE itemId = $[item.id] AND shoppingListId = $[shoppingListId]')
       .then(data => {
         this.loadItems();
@@ -165,7 +149,7 @@ export class DatabaseService {
           for (let i = 0; i < data.rows.length; i++) {
             shl.push({
               id: data.rows.item(i).id,
-              name: data.rows.item(i).name
+              name: data.rows.item(i).listName
             });
           }
         }
@@ -173,14 +157,24 @@ export class DatabaseService {
       });
   }
 
+
+  /// ATTACK HERE
+  // data.id and data.listname are returned as undefined
+  // addItem gets a shopping list id 'undefined'
+
   // create new shopping list
   addShoppingList(shoppingListName: string, items: Item[]) {
     // insert shopping list, then add items
     const sl = [shoppingListName];
     let slId = 0;
-    return this.database.executeSql('INSERT INTO shoppingLists name VALUES (?)', sl)
+    //     INSERT INTO shoppingLists
+    // (listName) VALUES ('lista');
+    console.log('addShoppingList >>> ' + sl);
+    return this.database.executeSql(
+      'INSERT INTO shoppingLists (listName) VALUES (?)', sl)
       .then(data => {
-        slId = data.shoppingListId;
+        slId = data.id;
+        console.log('INSERTED SHOPPING LIST. data.id= ' + data.id + ' data.listName= ' + data.listName);
         // this.loadItems();
         items.forEach(i => {
           this.addItem(i, slId);
@@ -201,7 +195,7 @@ export class DatabaseService {
   }
 
   updateShoppingList(shoppingListId: number, shoppingListName: string, items: Item[]) {
-    return this.database.executeSql('UPDATE shoppingLists SET name = ${shoppingListName} WHERE id = ${shoppingListId}').then(_ => {
+    return this.database.executeSql('UPDATE shoppingLists SET listName = ${shoppingListName} WHERE id = ${shoppingListId}').then(_ => {
       items.forEach(item => {
         this.updateItem(item, shoppingListId);
       });
