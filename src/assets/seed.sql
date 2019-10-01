@@ -1,4 +1,4 @@
-CREATE TABLE items (
+CREATE TABLE IF NOT EXISTS items (
 	id	INTEGER NOT NULL PRIMARY KEY,
 	shoppingListId	INTEGER,
 	itemName	TEXT, 
@@ -8,7 +8,7 @@ CREATE TABLE items (
 	notes	TEXT
 )
 ;
-CREATE TABLE shoppingLists (
+CREATE TABLE IF NOT EXISTS shoppingLists (
 	id	INTEGER NOT NULL PRIMARY KEY,
 	listName	TEXT
 );

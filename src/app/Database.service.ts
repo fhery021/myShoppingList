@@ -147,6 +147,9 @@ export class DatabaseService {
         const shl: ShoppingListModel[] = [];
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
+            console.log('data.rows.item(i).id === ' + data.rows.item(i).id);
+            console.log('data.rows.item(i).listName === ' + data.rows.item(i).listName);
+
             shl.push({
               id: data.rows.item(i).id,
               name: data.rows.item(i).listName
@@ -167,19 +170,23 @@ export class DatabaseService {
     // insert shopping list, then add items
     const sl = [shoppingListName];
     let slId = 0;
-    //     INSERT INTO shoppingLists
-    // (listName) VALUES ('lista');
     console.log('addShoppingList >>> ' + sl);
     return this.database.executeSql(
       'INSERT INTO shoppingLists (listName) VALUES (?)', sl)
-      .then(data => {
-        slId = data.id;
-        console.log('INSERTED SHOPPING LIST. data.id= ' + data.id + ' data.listName= ' + data.listName);
-        // this.loadItems();
-        items.forEach(i => {
-          this.addItem(i, slId);
-        });
-      });
+      .then(() => {
+        this.loadShoppingLists();
+
+        // dbItems.push({
+        //   id: data.rows.item(i).id,
+        //   shoppingListId: data.rows.item(i).shoppingListId,
+        // this.database.executeSql('SELECT  id from shoppingLists where listName=${shoppingListName}')
+      })
+      .catch(e => console.log('error inserting shopping list ' + e));
+
+    // items.forEach(i => {
+    //   this.addItem(i, slId);
+    // });
+
   }
 
   // getShoppingList(shoppingListId: number) {
