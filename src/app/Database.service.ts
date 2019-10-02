@@ -147,8 +147,8 @@ export class DatabaseService {
         const shl: ShoppingListModel[] = [];
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
-            console.log('data.rows.item(i).id === ' + data.rows.item(i).id);
-            console.log('data.rows.item(i).listName === ' + data.rows.item(i).listName);
+            // console.log('data.rows.item(i).id === ' + data.rows.item(i).id);
+            // console.log('data.rows.item(i).listName === ' + data.rows.item(i).listName);
 
             shl.push({
               id: data.rows.item(i).id,
@@ -173,7 +173,8 @@ export class DatabaseService {
     console.log('addShoppingList >>> ' + sl);
     return this.database.executeSql(
       'INSERT INTO shoppingLists (listName) VALUES (?)', sl)
-      .then(() => {
+      .then((rs) => {
+        console.log('rs.insertId=== ' + rs.insertId);
         this.loadShoppingLists();
 
         // dbItems.push({
@@ -209,4 +210,6 @@ export class DatabaseService {
     });
     // TODO catch stuff here!
   }
+
+
 }

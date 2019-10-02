@@ -49,11 +49,9 @@ export class ShoppingListService {
   // CREATE
   public createNewShoppingList(shoppingListName: string, items: Item[]) {
     if (this.validateShoppingList(shoppingListName, items)) {
-      this.db.addShoppingList(shoppingListName, items).then(res => {
-        // this.loadShoppingLists();
-        this.listsChanged.emit(this.shoppingLists.slice());
-        return true;
-      });
+      this.db.addShoppingList(shoppingListName, items);
+      this.listsChanged.emit(this.shoppingLists.slice());
+      return true;
     }
     return false;
   }
