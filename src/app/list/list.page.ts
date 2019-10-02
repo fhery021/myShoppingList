@@ -12,11 +12,12 @@ export class ListPage implements OnInit {
 
   private selectedItem: any;
 
-  constructor(private shoppingListService: ShoppingListService) { }
+  constructor(private shoppingListService: ShoppingListService) {
+    this.lists = this.shoppingListService.getShoppingLists();
+  }
 
   ngOnInit() {
-    this.lists = this.shoppingListService.getShoppingLists();
-
+    this.shoppingListService.loadShoppingLists();
     this.shoppingListService.listsChanged
       .subscribe(
         (lists: ShoppingListModel[]) => {

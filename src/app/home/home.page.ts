@@ -12,7 +12,7 @@ export class HomePage implements OnDestroy, AfterViewInit {
   backButtonSubscription: Subscription;
 
   constructor(
-    private platform: Platform, 
+    private platform: Platform,
     private toastController: ToastController) { }
 
   ngAfterViewInit() {

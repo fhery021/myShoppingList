@@ -25,13 +25,15 @@ export class ShoppingListService {
     private db: DatabaseService) {
 
     this.plt.ready().then(() => {
+      console.log('I am in the constructor');
       this.loadShoppingLists();
     });
   }
 
-  private loadShoppingLists() {
+  public loadShoppingLists() {
     this.db.getDatabaseState().subscribe(rdy => {
       if (rdy) {
+        console.log('platform-now it is ready');
         this.db.getShoppingLists().subscribe(sl => this.shoppingLists = sl);
       }
     });
@@ -39,10 +41,12 @@ export class ShoppingListService {
 
   // READ
   public getShoppingLists(): ShoppingListModel[] {
+    this.loadShoppingLists();
     return this.shoppingLists;
   }
 
   public getShoppingListById(id: number): Observable<ShoppingListModel> {
+    this.loadShoppingLists();
     return of(this.shoppingLists.find(sl => sl.id === id));
   }
 
