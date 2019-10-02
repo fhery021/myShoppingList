@@ -3,6 +3,7 @@ import { Item } from 'src/app/model/item';
 import { ItemEvent } from 'src/app/model/ItemEvent';
 import { DatabaseService } from 'src/app/Database.service';
 import { Platform, ToastController } from '@ionic/angular';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,10 +31,16 @@ export class ItemService {
       if (rdy) {
         this.db.getItems().subscribe(items => {
           this.items = items;
+          // temporary
+          this.items.forEach(i => console.log('item id = ' + i.id + 'item name = ' + i.name));
         });
       }
     });
+  }
 
+  // READ
+  public getItemsForShoppingList(id: number): Observable<Item[]> {
+    return of(this.items.filter(i => i.shoppingListId === id));
   }
 
   // CREATE

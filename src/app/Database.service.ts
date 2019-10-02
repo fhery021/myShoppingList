@@ -111,12 +111,11 @@ export class DatabaseService {
       .executeSql('INSERT INTO items ' +
         '(shoppingListId, itemName, quantity, unit, isShopped, notes) ' +
         'VALUES (?, ?, ?, ?, ?, ?)', dbItem)
-      .then(i => {
-        console.log('i= ' + i);
+      .then((rs) => {
+        console.log('add item with id ' + rs.insertId);
         this.loadItems();
       });
   }
-
 
   deleteItem(itemId: number, shoppingListId: number) {
     return this.database.executeSql('DELETE FROM items WHERE ID = ? AND shoppingListId = ?', [itemId, shoppingListId])
@@ -160,11 +159,6 @@ export class DatabaseService {
       });
   }
 
-
-  /// ATTACK HERE
-  // data.id and data.listname are returned as undefined
-  // addItem gets a shopping list id 'undefined'
-
   // create new shopping list
   addShoppingList(shoppingListName: string, items: Item[]) {
     // insert shopping list, then add items
@@ -175,19 +169,13 @@ export class DatabaseService {
       'INSERT INTO shoppingLists (listName) VALUES (?)', sl)
       .then((rs) => {
         console.log('rs.insertId=== ' + rs.insertId);
+        slId = rs.insertId;
+        items.forEach(i => {
+          this.addItem(i, slId);
+        });
         this.loadShoppingLists();
-
-        // dbItems.push({
-        //   id: data.rows.item(i).id,
-        //   shoppingListId: data.rows.item(i).shoppingListId,
-        // this.database.executeSql('SELECT  id from shoppingLists where listName=${shoppingListName}')
       })
-      .catch(e => console.log('error inserting shopping list ' + e));
-
-    // items.forEach(i => {
-    //   this.addItem(i, slId);
-    // });
-
+      .catch(e => console.log('error adding shopping list ' + e));
   }
 
   // getShoppingList(shoppingListId: number) {

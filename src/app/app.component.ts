@@ -32,8 +32,7 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private appMinimize: AppMinimize
+    private statusBar: StatusBar
   ) {
     this.initializeApp();
   }
@@ -46,6 +45,6 @@ export class AppComponent {
   }
 
   exitApp() {
-   this.appMinimize.minimize();
+    navigator['app'].exitApp();
   }
 }

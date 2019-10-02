@@ -19,6 +19,8 @@ export class DetailPage implements OnInit {
   pageName = 'detail';
   shoppingList: ShoppingListModel;
 
+  items: Item[];
+
   createForm: FormGroup;
 
   showAddItemForm = false;
@@ -47,12 +49,14 @@ export class DetailPage implements OnInit {
     });
   }
 
-
   ngOnInit() {
     this.shoppingListId = +this.route.snapshot.paramMap.get('id');
 
     this.shoppingListService.getShoppingListById(this.shoppingListId)
       .subscribe(sl => this.shoppingList = sl);
+
+    this.itemService.getItemsForShoppingList(this.shoppingListId)
+      .subscribe(its => this.items = its);
 
     this.itemService.itemChanged
       .subscribe(
