@@ -30,13 +30,19 @@ export class ShoppingListService {
     });
   }
 
-  public loadShoppingLists() {
+  public loadShoppingLists(): Observable<ShoppingListModel[]> {
     this.db.getDatabaseState().subscribe(rdy => {
       if (rdy) {
         console.log('platform-now it is ready');
         this.db.getShoppingLists().subscribe(sl => this.shoppingLists = sl);
       }
     });
+
+    return this.db.getShoppingLists();
+  }
+
+  public getDatabaseState(): Observable<boolean> {
+    return this.db.getDatabaseState();
   }
 
   // READ
