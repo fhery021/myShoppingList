@@ -45,11 +45,11 @@ export class ShoppingListService {
     return this.db.getDatabaseState();
   }
 
-  // READ
-  public getShoppingLists(): ShoppingListModel[] {
-    this.loadShoppingLists();
-    return this.shoppingLists;
-  }
+  // // READ
+  // public getShoppingLists(): ShoppingListModel[] {
+  //   this.loadShoppingLists();
+  //   return this.shoppingLists;
+  // }
 
   public getShoppingListById(id: number): Observable<ShoppingListModel> {
     this.loadShoppingLists();

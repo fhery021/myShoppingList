@@ -23,13 +23,6 @@ export class ListPage implements OnInit {
     this.obsLists.subscribe(l => {
       this.lists = l;
     });
-    // this.shoppingListService.listsChanged
-    //   .subscribe(
-    //     (lists: ShoppingListModel[]) => {
-    //       this.lists = lists.entries();
-    //     }
-    //   );
-    
   }
 
   public onDeleteShoppingList(shl: ShoppingListModel) {
