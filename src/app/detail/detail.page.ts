@@ -8,6 +8,7 @@ import { ItemEvent } from '../model/ItemEvent';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Item } from '../model/item';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-detail',
@@ -19,6 +20,7 @@ export class DetailPage implements OnInit {
   pageName = 'detail';
   shoppingList: ShoppingListModel;
 
+  obsItems: Observable<Item[]>;
   items: Item[];
 
   createForm: FormGroup;
@@ -55,8 +57,22 @@ export class DetailPage implements OnInit {
     this.shoppingListService.getShoppingListById(this.shoppingListId)
       .subscribe(sl => this.shoppingList = sl);
 
-    this.itemService.getItemsForShoppingList(this.shoppingListId)
-      .subscribe(its => this.items = its);
+    this.obsItems = this.itemService.loadItems();
+    this.obsItems.subscribe(itms => {
+      this.items = itms.filter(i => i.shoppingListId === this.shoppingListId);
+    });
+
+    // this.itemService.getItemsForShoppingList(this.shoppingListId)
+    //   .subscribe(its => this.items = its);
+
+    // old:
+    // this.shoppingListId = +this.route.snapshot.paramMap.get('id');
+
+    // this.shoppingListService.getShoppingListById(this.shoppingListId)
+    //   .subscribe(sl => this.shoppingList = sl);
+
+    // this.itemService.getItemsForShoppingList(this.shoppingListId)
+    //   .subscribe(its => this.items = its);
 
     this.itemService.itemChanged
       .subscribe(

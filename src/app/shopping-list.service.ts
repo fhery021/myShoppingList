@@ -45,12 +45,6 @@ export class ShoppingListService {
     return this.db.getDatabaseState();
   }
 
-  // // READ
-  // public getShoppingLists(): ShoppingListModel[] {
-  //   this.loadShoppingLists();
-  //   return this.shoppingLists;
-  // }
-
   public getShoppingListById(id: number): Observable<ShoppingListModel> {
     this.loadShoppingLists();
     return of(this.shoppingLists.find(sl => sl.id === id));
@@ -61,6 +55,7 @@ export class ShoppingListService {
     if (this.validateShoppingList(shoppingListName, items)) {
       this.db.addShoppingList(shoppingListName, items);
       this.listsChanged.emit(this.shoppingLists.slice());
+      this.showToast('Shopping List Created');
       return true;
     }
     return false;
@@ -70,6 +65,7 @@ export class ShoppingListService {
   public updateShoppingList(sl: ShoppingListModel, items: Item[]) {
     this.db.updateShoppingList(sl.id, sl.name, items).then(_ => {
       this.listsChanged.emit(this.shoppingLists.slice());
+      this.showToast('Shopping List Updated');
     });
   }
 
@@ -78,6 +74,7 @@ export class ShoppingListService {
     this.db.deleteShoppingList(list.id).then(_ => {
       // this.loadShoppingLists();
       this.listsChanged.emit(this.shoppingLists.slice());
+      this.showToast('Shopping List Deleted');
     });
   }
 

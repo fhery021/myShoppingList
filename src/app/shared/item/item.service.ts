@@ -26,16 +26,15 @@ export class ItemService {
     });
   }
 
-  private loadItems() {
+  public loadItems(): Observable<Item[]> {
     this.db.getDatabaseState().subscribe(rdy => {
       if (rdy) {
-        this.db.getItems().subscribe(items => {
-          this.items = items;
-          // temporary
-          this.items.forEach(i => console.log('item id = ' + i.id + 'item name = ' + i.name));
-        });
+        console.log('[ItemService:loadItems()] Database is ready');
+        this.db.getItems().subscribe(itms => this.items = itms);
       }
     });
+
+    return this.db.getItems();
   }
 
   // READ
