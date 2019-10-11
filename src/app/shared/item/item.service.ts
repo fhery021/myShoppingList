@@ -1,7 +1,9 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Item } from 'src/app/model/item';
-import { Md5 } from 'ts-md5/dist/md5';
 import { ItemEvent } from 'src/app/model/ItemEvent';
+import { DatabaseService } from 'src/app/Database.service';
+import { Platform, ToastController } from '@ionic/angular';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +15,46 @@ export class ItemService {
 
   private pageName: string;
 
-  constructor(private md5: Md5) { }
+  private items: Item[] = [];
 
-  public newItem(product: string, quantity: number, unit: string, notes: string, isShopped: boolean) {
-    const item: Item = new Item(Md5.hashStr(new Date().toString()).toString(), product, quantity, unit, notes, isShopped);
-    console.log(item);
-    return item;
+  constructor(
+    private plt: Platform,
+    private toastController: ToastController,
+    private db: DatabaseService) {
+    this.plt.ready().then(() => {
+      this.loadItems();
+    });
+  }
+
+  public loadItems(): Observable<Item[]> {
+    this.db.getDatabaseState().subscribe(rdy => {
+      if (rdy) {
+        console.log('[ItemService:loadItems()] Database is ready');
+        this.db.getItems().subscribe(itms => this.items = itms);
+      }
+    });
+
+    return this.db.getItems();
+  }
+
+  // READ
+  public getItemsForShoppingList(id: number): Observable<Item[]> {
+    return of(this.items.filter(i => i.shoppingListId === id));
+  }
+
+  // CREATE
+  public addItem(shoppingListId: number, newItem: Item): void {
+    this.db.addItem(newItem, shoppingListId).then(_ => this.showToast('Item added'));
+  }
+
+  // UPDATE
+  public updateShoppingListItem(shoppingListId: number, item: Item): void {
+    this.db.updateItem(item, shoppingListId).then(_ => this.showToast('Item updated'));
+  }
+
+  // DELETE
+  public deleteShoppingListItem(shoppingListId: number, item: Item): void {
+    this.db.deleteItem(item.id, shoppingListId).then(_ => this.showToast('Item deleted'));
   }
 
   public updateItem(oldItem: Item, newItem: Item) {
@@ -26,5 +62,16 @@ export class ItemService {
     oldItem.quantity = newItem.quantity;
     oldItem.unit = newItem.unit;
     oldItem.notes = newItem.notes;
+  }
+
+
+  public async showToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 3000,
+      position: 'bottom'
+    });
+
+    await toast.present();
   }
 }

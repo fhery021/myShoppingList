@@ -74,8 +74,7 @@ export class CreatePage implements OnInit {
     if (this.newItem.product === null || this.newItem.product === '') {
       this.shoppingListService.presentAlert('Empty Product', 'Product name is mandatory!');
     } else {
-      this.items.push(
-        this.itemService.newItem(this.newItem.product, this.newItem.quantity, this.newItem.unit, this.newItem.notes, false));
+      this.items.push(new Item(this.newItem.product, this.newItem.quantity, this.newItem.unit, this.newItem.notes, false));
     }
   }
 

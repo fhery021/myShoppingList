@@ -7,6 +7,8 @@ import { ItemService } from '../shared/item/item.service';
 import { ItemEvent } from '../model/ItemEvent';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Item } from '../model/item';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-detail',
@@ -18,9 +20,14 @@ export class DetailPage implements OnInit {
   pageName = 'detail';
   shoppingList: ShoppingListModel;
 
+  obsItems: Observable<Item[]>;
+  items: Item[];
+
   createForm: FormGroup;
 
   showAddItemForm = false;
+
+  shoppingListId = 0;
 
   newItem: {
     product: string;
@@ -45,7 +52,28 @@ export class DetailPage implements OnInit {
   }
 
   ngOnInit() {
-    this.getShoppingList();
+    this.shoppingListId = +this.route.snapshot.paramMap.get('id');
+
+    this.shoppingListService.getShoppingListById(this.shoppingListId)
+      .subscribe(sl => this.shoppingList = sl);
+
+    this.obsItems = this.itemService.loadItems();
+    this.obsItems.subscribe(itms => {
+      this.items = itms.filter(i => i.shoppingListId === this.shoppingListId);
+    });
+
+    // this.itemService.getItemsForShoppingList(this.shoppingListId)
+    //   .subscribe(its => this.items = its);
+
+    // old:
+    // this.shoppingListId = +this.route.snapshot.paramMap.get('id');
+
+    // this.shoppingListService.getShoppingListById(this.shoppingListId)
+    //   .subscribe(sl => this.shoppingList = sl);
+
+    // this.itemService.getItemsForShoppingList(this.shoppingListId)
+    //   .subscribe(its => this.items = its);
+
     this.itemService.itemChanged
       .subscribe(
         (changedItem: ItemEvent) => {
@@ -58,12 +86,12 @@ export class DetailPage implements OnInit {
           this.deleteItem(deletedItem);
         }
       );
-  }
-
-  private getShoppingList(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.shoppingListService.getShoppingListById(id)
-      .subscribe(sl => this.shoppingList = sl);
+    this.shoppingListService.listsChanged
+      .subscribe(
+        () => {
+          this.shoppingListService.getShoppingListById(this.shoppingListId)
+            .subscribe(sl => this.shoppingList = sl);
+        });
   }
 
   goBack(): void {
@@ -72,13 +100,14 @@ export class DetailPage implements OnInit {
 
   private changeItem(itemEvent: ItemEvent) {
     if (itemEvent.pageName === this.pageName) {
-      this.shoppingListService.updateShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
+      // this.shoppingListService.updateShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
+      this.itemService.updateShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
     }
   }
 
   private deleteItem(itemEvent: ItemEvent) {
     if (itemEvent.pageName === this.pageName) {
-      this.shoppingListService.deleteShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
+      this.itemService.deleteShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
     }
   }
 
@@ -88,11 +117,12 @@ export class DetailPage implements OnInit {
     if (this.newItem.product === null || this.newItem.product === '') {
       this.shoppingListService.presentAlert('Empty Product', 'Product name is mandatory!');
     } else {
-      this.shoppingListService.addShoppingListItem(
-        this.shoppingList.id,
-        this.itemService
-          .newItem(this.newItem.product, this.newItem.quantity, this.newItem.unit, this.newItem.notes, false));
-
+      this.itemService.addItem(this.shoppingListId,
+        new Item(this.newItem.product,
+          this.newItem.quantity,
+          this.newItem.unit,
+          this.newItem.notes,
+          false));
       this.toggleAddForm();
     }
   }

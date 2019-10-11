@@ -41,7 +41,7 @@
 
         <ion-col>
           <ion-item>
-            <ion-checkbox [(ngModel)]="item.isShopped"></ion-checkbox>
+            <ion-checkbox [(ngModel)]="item.isShopped" [disabled]="!editMode"></ion-checkbox>
             <ion-label>Shopped</ion-label>
           </ion-item>
         </ion-col>

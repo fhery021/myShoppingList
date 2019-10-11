@@ -12,7 +12,7 @@ export class ItemComponent implements OnInit {
 
   @Input() item: Item;
   @Input() pageName: string;
-  @Input() shoppingListId: string;
+  @Input() shoppingListId: number;
 
   editMode = false;
 
@@ -33,6 +33,10 @@ export class ItemComponent implements OnInit {
 
   onClickDeleteItem() {
     this.itemService.itemDeleted.emit(new ItemEvent(this.pageName, this.shoppingListId, this.item));
+  }
+
+  onClickShopped(){
+    this.itemService.itemChanged.emit(new ItemEvent(this.pageName, this.shoppingListId, this.item));
   }
 
 }

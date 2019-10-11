@@ -70,7 +70,7 @@
   </div>
 
   <ion-list>
-    <ion-item *ngFor="let item of shoppingList.items">
+    <ion-item *ngFor="let item of items">
       <!-- <ion-icon name="cart" slot="start"></ion-icon> -->
       <app-item [item]=item [pageName]=pageName [shoppingListId]=shoppingList.id></app-item>
     </ion-item>
