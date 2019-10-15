@@ -101,6 +101,10 @@ export class DetailPage implements OnInit {
   private changeItem(itemEvent: ItemEvent) {
     if (itemEvent.pageName === this.pageName) {
       // this.shoppingListService.updateShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
+      console.log('change item event' +
+        'list id = ' + itemEvent.shoppingListId +
+        ' item name=' + itemEvent.item.name +
+        ' item isShopped=' + itemEvent.item.isShopped);
       this.itemService.updateShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
     }
   }

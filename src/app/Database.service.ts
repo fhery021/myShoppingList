@@ -88,15 +88,16 @@ export class DatabaseService {
 
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
-            dbItems.push({
-              id: data.rows.item(i).id,
-              shoppingListId: data.rows.item(i).shoppingListId,
-              name: data.rows.item(i).itemName,
-              quantity: data.rows.item(i).quantity,
-              isShopped: data.rows.item(i).isShopped === 1 ? true : false,
-              unit: data.rows.item(i).unit,
-              notes: data.rows.item(i).notes
-            });
+            const itm  = new Item(
+              data.rows.item(i).itemName,
+              data.rows.item(i).quantity,
+              data.rows.item(i).unit,
+              data.rows.item(i).notes,
+              data.rows.item(i).isShopped === 1 ? true : false
+            );
+            itm.id = data.rows.item(i).id;
+            itm.shoppingListId = data.rows.item(i).shoppingListId;
+            dbItems.push(itm);
           }
         }
         this.items.next(dbItems);
@@ -126,6 +127,8 @@ export class DatabaseService {
   }
 
   updateItem(item: Item, shoppingListId: number) {
+    console.log('update/slId=' + shoppingListId + 'item.isShopped=' + item.isShopped);
+    item.log();
     const dbItem = [item.name, item.quantity, item.unit, item.isShopped === true ? 1 : 0, item.notes, shoppingListId];
     return this.database.executeSql('UPDATE items ' +
       'SET itemName = ?, quantity = ?, unit = ?, isShopped = ?, notes = ? ' +

@@ -35,7 +35,9 @@ export class ItemComponent implements OnInit {
     this.itemService.itemDeleted.emit(new ItemEvent(this.pageName, this.shoppingListId, this.item));
   }
 
-  onClickShopped(){
+  onClickShopped() {
+    console.log('item in itemComponent/onClickShopped:');
+    this.item.log();
     this.itemService.itemChanged.emit(new ItemEvent(this.pageName, this.shoppingListId, this.item));
   }
 

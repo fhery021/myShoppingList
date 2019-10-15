@@ -10,4 +10,12 @@ export class Item {
         public notes: string,
         public isShopped: boolean
     ) { }
+
+    log(): void {
+        console.log('item_id=' + this.id +
+            ' shoppingListId=' + this.shoppingListId +
+            ' item name=' + this.name + ' quantity=' + this.quantity +
+            ' unit=' + this.unit + ' isShopped=' + this.isShopped);
+    }
+
 }
