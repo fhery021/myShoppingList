@@ -88,7 +88,9 @@ export class DatabaseService {
 
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
-            const itm  = new Item(
+            console.log('item: ' + data.rows.item(i).itemName +
+              'data.rows.item(i).isShopped=' + data.rows.item(i).isShopped);
+            const itm = new Item(
               data.rows.item(i).itemName,
               data.rows.item(i).quantity,
               data.rows.item(i).unit,
@@ -129,14 +131,10 @@ export class DatabaseService {
   updateItem(item: Item, shoppingListId: number) {
     console.log('update/slId=' + shoppingListId + 'item.isShopped=' + item.isShopped);
     item.log();
-    const dbItem = [item.name, item.quantity, item.unit, item.isShopped === true ? 1 : 0, item.notes, shoppingListId];
+    const dbItem = [item.name, item.quantity, item.unit, item.isShopped === true ? 1 : 0, item.notes, item.id, shoppingListId];
     return this.database.executeSql('UPDATE items ' +
       'SET itemName = ?, quantity = ?, unit = ?, isShopped = ?, notes = ? ' +
-      'WHERE itemId = $[item.id] AND shoppingListId = $[shoppingListId]')
-      .then(data => {
-        this.loadItems();
-        // this.loadShoppingLists ??
-      });
+      'WHERE id = ? AND shoppingListId = ?', dbItem);
   }
 
   // shoppingLists

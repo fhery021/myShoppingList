@@ -29,7 +29,6 @@ export class ItemService {
   public loadItems(): Observable<Item[]> {
     this.db.getDatabaseState().subscribe(rdy => {
       if (rdy) {
-        console.log('[ItemService:loadItems()] Database is ready');
         this.db.getItems().subscribe(itms => this.items = itms);
       }
     });

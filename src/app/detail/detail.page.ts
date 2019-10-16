@@ -62,18 +62,6 @@ export class DetailPage implements OnInit {
       this.items = itms.filter(i => i.shoppingListId === this.shoppingListId);
     });
 
-    // this.itemService.getItemsForShoppingList(this.shoppingListId)
-    //   .subscribe(its => this.items = its);
-
-    // old:
-    // this.shoppingListId = +this.route.snapshot.paramMap.get('id');
-
-    // this.shoppingListService.getShoppingListById(this.shoppingListId)
-    //   .subscribe(sl => this.shoppingList = sl);
-
-    // this.itemService.getItemsForShoppingList(this.shoppingListId)
-    //   .subscribe(its => this.items = its);
-
     this.itemService.itemChanged
       .subscribe(
         (changedItem: ItemEvent) => {
