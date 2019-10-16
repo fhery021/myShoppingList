@@ -14,6 +14,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { Subscription } from 'rxjs';
     AppMinimize,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     SQLite,
-    SQLitePorter
+    SQLitePorter,
+    SocialSharing
   ],
   bootstrap: [AppComponent]
 })
