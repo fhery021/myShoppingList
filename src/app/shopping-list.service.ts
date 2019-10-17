@@ -4,7 +4,6 @@ import { ShoppingListModel } from './model/shoppingListModel';
 import { Item } from './model/item';
 import { DatabaseService } from './Database.service';
 import { Observable, of } from 'rxjs';
-import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 
 @Injectable({
@@ -23,8 +22,7 @@ export class ShoppingListService {
     private alertController: AlertController,
     private plt: Platform,
     private toastController: ToastController,
-    private db: DatabaseService,
-    private socialSharing: SocialSharing) {
+    private db: DatabaseService) {
 
     this.plt.ready().then(() => {
       console.log('I am in the constructor');
@@ -79,11 +77,6 @@ export class ShoppingListService {
       this.showToast('Shopping List Deleted');
     });
   }
-
-  public shareShoppingList(list: ShoppingListModel) {
-    this.socialSharing.share(list.name, 'Sharing shopping list: ' + list.name, null, null);
-  }
-
 
   // UTILS -- future improvement to move in some helper class (?)
   public generateShoppingListName() {

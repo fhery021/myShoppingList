@@ -15,6 +15,7 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     SQLite,
     SQLitePorter,
-    SocialSharing
+    SocialSharing,
+    File
   ],
   bootstrap: [AppComponent]
 })
