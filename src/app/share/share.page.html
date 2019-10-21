@@ -11,6 +11,15 @@
 
 <ion-content>
 
+  <ion-toolbar>
+    <ion-buttons slot="secondary">
+      <ion-button fill="outline" (click)="onImport()">
+        <ion-icon slot="start" name="download"></ion-icon>
+        Import
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
   <ion-list>
     <ion-item *ngFor="let shoppingList of lists">
       <ion-icon name="list-box" slot="start"></ion-icon>
@@ -19,7 +28,7 @@
         {{ shoppingList.name }}
       </ion-button>
       <div class="item-note" slot="end">
-        <ion-icon name="share" (click)="onShare(shoppingList.id)"></ion-icon>
+        <ion-icon name="share" (click)="onShare(shoppingList.id)"></ion-icon> Share
       </div>
     </ion-item>
   </ion-list>

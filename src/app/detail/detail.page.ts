@@ -10,6 +10,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Item } from '../model/item';
 import { Observable } from 'rxjs';
 import { SharingService } from '../sharing.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-detail',
@@ -43,7 +44,9 @@ export class DetailPage implements OnInit {
     private location: Location,
     private itemService: ItemService,
     private formBuilder: FormBuilder,
-    private sharingService: SharingService
+    private sharingService: SharingService,
+    private alertCtrl: AlertController
+
   ) {
     this.createForm = this.formBuilder.group({
       product: ['', Validators.required],
@@ -127,11 +130,37 @@ export class DetailPage implements OnInit {
   }
 
   public onDeleteShoppingList() {
-    this.shoppingListService.deleteShoppingListById(this.shoppingListId);
+    this.presentConfirmAndDelete();
   }
 
   public onSend() {
     this.sharingService.shareShoppingList(this.shoppingListId);
   }
 
+  // TODO MOVE THIS IN UTILS
+  async presentConfirmAndDelete() {
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm delete',
+      message: 'Are you sure you want to delete this shopping list?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            console.log('Delete clicked');
+            this.shoppingListService.deleteShoppingListById(this.shoppingListId);
+            this.goBack();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 }

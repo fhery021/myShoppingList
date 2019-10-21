@@ -3,5 +3,5 @@ import { ShoppingListModel } from '../model/shoppingListModel';
 import { Item } from '../model/item';
 
 export class TransferModel {
-    constructor(private shoppingListModel: ShoppingListModel, private items: Item[]) { }
+    constructor(public shoppingListModel: ShoppingListModel, public items: Item[]) { }
 }

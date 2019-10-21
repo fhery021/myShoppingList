@@ -29,5 +29,9 @@ export class SharePage implements OnInit {
     this.sharingService.shareShoppingList(shoppingListId);
   }
 
+  public onImport() {
+    this.sharingService.importShoppingList();
+  }
+
 
 }
