@@ -12,8 +12,6 @@ export class ListPage implements OnInit {
   obsLists: Observable<ShoppingListModel[]>;
   lists: ShoppingListModel[];
 
-  private selectedItem: any;
-
   constructor(private shoppingListService: ShoppingListService) {
   }
 

@@ -25,8 +25,8 @@ export class SharePage implements OnInit {
     });
   }
 
-  public onShare(shl: ShoppingListModel) {
-    this.sharingService.shareShoppingList(shl);
+  public onShare(shoppingListId: number) {
+    this.sharingService.shareShoppingList(shoppingListId);
   }
 
 

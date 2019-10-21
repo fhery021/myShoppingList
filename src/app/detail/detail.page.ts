@@ -9,6 +9,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Item } from '../model/item';
 import { Observable } from 'rxjs';
+import { SharingService } from '../sharing.service';
 
 @Component({
   selector: 'app-detail',
@@ -42,6 +43,7 @@ export class DetailPage implements OnInit {
     private location: Location,
     private itemService: ItemService,
     private formBuilder: FormBuilder,
+    private sharingService: SharingService
   ) {
     this.createForm = this.formBuilder.group({
       product: ['', Validators.required],
@@ -122,6 +124,14 @@ export class DetailPage implements OnInit {
   toggleAddForm(): void {
     this.createForm.reset();
     this.showAddItemForm = !this.showAddItemForm;
+  }
+
+  public onDeleteShoppingList() {
+    this.shoppingListService.deleteShoppingListById(this.shoppingListId);
+  }
+
+  public onSend() {
+    this.sharingService.shareShoppingList(this.shoppingListId);
   }
 
 }

@@ -19,7 +19,7 @@
         {{ shoppingList.name }}
       </ion-button>
       <div class="item-note" slot="end">
-        <ion-icon name="share" (click)="onShare(shoppingList)"></ion-icon>
+        <ion-icon name="share" (click)="onShare(shoppingList.id)"></ion-icon>
       </div>
     </ion-item>
   </ion-list>
