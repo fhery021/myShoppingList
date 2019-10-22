@@ -47,37 +47,36 @@ export class SharingService {
 
     const fileName = 'ShoppingList' + listId + '.json';
     // return ?
-    this.file.createFile(this.file.cacheDirectory, fileName, true)
+    return this.file.createFile(this.file.cacheDirectory, fileName, true)
       .then(fileEntry => {
-        this.showToast('File created');
         this.file.writeExistingFile(this.file.cacheDirectory, fileName, content)
           .then(() => {
-            this.showToast('Sharing File');
-            this.socialSharing.canShareViaEmail().then(() => {
-              this.socialSharing.shareViaEmail('Download the attached shopping list and import it in the Share menu',
-                'Shopping list:' + this.shoppingListModel.name,
-                null, null, null, fileEntry.nativeURL);
+            this.showToast('File exported.');
+            const message = 'Download the attached shopping list and import it in the Share menu';
+            const subject = 'Shopping list:' + this.shoppingListModel.name;
+
+            // this.socialSharing.canShareViaEmail().then(() => {
+            //   this.socialSharing.shareViaEmail('Download the attached shopping list and import it in the Share menu',
+            //     'Shopping list:' + this.shoppingListModel.name,
+            //     null, null, null, fileEntry.nativeURL);
+            this.socialSharing.share(message, subject, fileEntry.nativeURL);
             }).catch(reason => {
-              this.showToast('Cannot share via e-mail');
-              console.log('Cannot share via e-mail');
-              console.log('Cannot share via e-mail reason: ' + reason);
+              this.showToast('Cannot share ');
+              console.log('Cannot share ');
+              console.log('Cannot share. reason: ' + reason);
             });
 
-          });
+          // });
       });
 
     // this.socialSharing.share('message', 'subject ' + list.name, null)
     //   .then(() => this.showToast('Share Done'));
   }
 
-  // TODO
   public importShoppingList() {
     this.fileChooser.open()
       .then(uri => {
         console.log('File open successful from ' + uri);
-        // read from file
-        // this.filePath.resolve
-        // const transferModel = JSON.parse(this.file.)
         this.filePath.resolveNativePath(uri)
           .then(nativePath => {
             console.log('Native file path = ' + nativePath);

@@ -134,14 +134,17 @@ export class DetailPage implements OnInit {
   }
 
   public onSend() {
-    this.sharingService.shareShoppingList(this.shoppingListId);
+    this.sharingService.shareShoppingList(this.shoppingListId)
+      .catch(err => {
+        this.presentAlert('Share unsuccessful', 'An error has occured during sharing this shopping list');
+        console.log(err);
+      });
   }
 
-  // TODO MOVE THIS IN UTILS
   async presentConfirmAndDelete() {
     const alert = await this.alertCtrl.create({
       header: 'Confirm delete',
-      message: 'Are you sure you want to delete this shopping list?',
+      message: 'Are you sure you want to delete this shopping list? All items from this list will be lost.',
       buttons: [
         {
           text: 'Cancel',
@@ -163,4 +166,15 @@ export class DetailPage implements OnInit {
     });
     await alert.present();
   }
+
+  public async presentAlert(msgHeader: string, msgContent: string) {
+    const alert = await this.alertCtrl.create({
+      header: msgHeader,
+      message: msgContent,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
 }
