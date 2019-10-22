@@ -12,17 +12,29 @@
 
 
 <ion-content>
-  <div class="item item-divider" *ngIf="!showAddItemForm">
-    <ion-button (click)="toggleAddForm()">
-      <ion-icon name="add-circle-outline"></ion-icon>
-      Add New Item
-    </ion-button>
 
-    <ion-button (click)="goBack()" color="secondary">
-      <ion-icon name="backspace"></ion-icon>
-      Back To My Shopping Lists
-    </ion-button>
-  </div>
+  <ion-fab vertical="top" horizontal="start" *ngIf="!showAddItemForm" >
+    <ion-fab-button color="light">
+      <ion-icon name="arrow-dropright"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="end">
+      <ion-fab-button (click)="onSend()">
+        <ion-icon name="send" fill="outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="onDeleteShoppingList()">
+        <ion-icon name="trash" fill="outline" color="danger"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="goBack()">
+        <ion-icon name="backspace" fill="outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+
+    <ion-fab-list side="bottom">
+      <ion-fab-button (click)="toggleAddForm()">
+        <ion-icon name="add" fill="outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 
   <div *ngIf="showAddItemForm">
     <ion-card>
@@ -72,7 +84,7 @@
   <ion-list>
     <ion-item *ngFor="let item of items">
       <!-- <ion-icon name="cart" slot="start"></ion-icon> -->
-      <app-item [item]=item [pageName]=pageName [shoppingListId]=shoppingList.id></app-item>
+      <app-item [item]=item [pageName]=PAGE_NAME [shoppingListId]=shoppingList.id></app-item>
     </ion-item>
   </ion-list>
 

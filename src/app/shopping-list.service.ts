@@ -77,7 +77,14 @@ export class ShoppingListService {
       this.showToast('Shopping List Deleted');
     });
   }
-
+  // DELETE BY ID
+  public deleteShoppingListById(id: number) {
+    this.db.deleteShoppingList(id).then(_ => {
+      // this.loadShoppingLists();
+      this.listsChanged.emit(this.shoppingLists.slice());
+      this.showToast('Shopping List Deleted');
+    });
+  }
 
   // UTILS -- future improvement to move in some helper class (?)
   public generateShoppingListName() {

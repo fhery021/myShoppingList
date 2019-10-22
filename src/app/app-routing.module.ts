@@ -19,6 +19,7 @@ const routes: Routes = [
   { path: 'create', loadChildren: './create/create.module#CreatePageModule' },
   { path: 'detail/:id', loadChildren: './detail/detail.module#DetailPageModule' }
 
+
 ];
 
 @NgModule({

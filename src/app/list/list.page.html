@@ -4,23 +4,47 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Lists
+      My Shopping Lists
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
+  <ion-toolbar>
+    <ion-buttons slot="secondary">
+      <ion-button fill="outline" (click)="onImport()">
+        <ion-icon slot="start" name="download"></ion-icon>
+        Import
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+
   <ion-list>
     <ion-item *ngFor="let shoppingList of lists">
-      <ion-icon name="list-box" slot="start"></ion-icon>
-      <ion-button routerLink="/detail/{{shoppingList.id}}" routerLinkActive="router-link-active" color="light"
-        expand="full">
-        {{ shoppingList.name }}
-      </ion-button>
-      <div class="item-note" slot="end">
-        <ion-icon name="trash" (click)="onDeleteShoppingList(shoppingList)"></ion-icon>
-      </div>
+      <ion-card style="width: 100%;">
+        <ion-card-header>
+          <a routerLink="/detail/{{shoppingList.id}}" routerLinkActive="router-link-active">
+            <ion-item lines="full">
+              <ion-label class="ion-text-wrap">
+                <ion-text color="primary">
+                  {{ shoppingList.name }}
+                </ion-text>
+              </ion-label>
+            </ion-item>
+          </a>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-buttons>
+            <ion-button fill="outline" (click)="onSend(shoppingList.id)">
+              <ion-icon name="send" fill="outline"></ion-icon>Send
+            </ion-button>
+            <ion-button fill="outline" (click)="onDeleteShoppingList(shoppingList)">
+              <ion-icon name="trash"></ion-icon>Delete
+            </ion-button>
+          </ion-buttons>
+        </ion-card-content>
+      </ion-card>
     </ion-item>
   </ion-list>
-</ion-content>

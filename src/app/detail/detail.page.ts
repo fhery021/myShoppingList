@@ -6,9 +6,10 @@ import { ShoppingListModel } from '../model/shoppingListModel';
 import { ItemService } from '../shared/item/item.service';
 import { ItemEvent } from '../model/ItemEvent';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Item } from '../model/item';
 import { Observable } from 'rxjs';
+import { SharingService } from '../sharing.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-detail',
@@ -17,7 +18,7 @@ import { Observable } from 'rxjs';
 })
 export class DetailPage implements OnInit {
 
-  pageName = 'detail';
+  PAGE_NAME = 'detail';
   shoppingList: ShoppingListModel;
 
   obsItems: Observable<Item[]>;
@@ -42,6 +43,9 @@ export class DetailPage implements OnInit {
     private location: Location,
     private itemService: ItemService,
     private formBuilder: FormBuilder,
+    private sharingService: SharingService,
+    private alertCtrl: AlertController
+
   ) {
     this.createForm = this.formBuilder.group({
       product: ['', Validators.required],
@@ -87,7 +91,7 @@ export class DetailPage implements OnInit {
   }
 
   private changeItem(itemEvent: ItemEvent) {
-    if (itemEvent.pageName === this.pageName) {
+    if (itemEvent.pageName === this.PAGE_NAME) {
       // this.shoppingListService.updateShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
       console.log('change item event' +
         'list id = ' + itemEvent.shoppingListId +
@@ -98,8 +102,11 @@ export class DetailPage implements OnInit {
   }
 
   private deleteItem(itemEvent: ItemEvent) {
-    if (itemEvent.pageName === this.pageName) {
+    if (itemEvent.pageName === this.PAGE_NAME) {
       this.itemService.deleteShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
+      if (this.items.length === 0 && !this.showAddItemForm) {
+        this.toggleAddForm();
+      }
     }
   }
 
@@ -122,6 +129,54 @@ export class DetailPage implements OnInit {
   toggleAddForm(): void {
     this.createForm.reset();
     this.showAddItemForm = !this.showAddItemForm;
+  }
+
+  public onDeleteShoppingList() {
+    this.presentConfirmAndDelete();
+  }
+
+  public onSend() {
+    this.sharingService.shareShoppingList(this.shoppingListId)
+      .catch(err => {
+        this.presentAlert('Share unsuccessful', 'An error has occured during sharing this shopping list');
+        console.log(err);
+      });
+  }
+
+  async presentConfirmAndDelete() {
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm delete',
+      message: 'Are you sure you want to delete this shopping list? All items from this list will be lost.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            console.log('Delete clicked');
+            this.shoppingListService.deleteShoppingListById(this.shoppingListId);
+            this.goBack();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  public async presentAlert(msgHeader: string, msgContent: string) {
+    const alert = await this.alertCtrl.create({
+      header: msgHeader,
+      message: msgContent,
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 
 }

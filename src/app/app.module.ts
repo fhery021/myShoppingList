@@ -14,7 +14,10 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { Subscription } from 'rxjs';
-
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,7 +36,11 @@ import { Subscription } from 'rxjs';
     AppMinimize,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     SQLite,
-    SQLitePorter
+    SQLitePorter,
+    SocialSharing,
+    FileChooser,
+    File,
+    FilePath
   ],
   bootstrap: [AppComponent]
 })
