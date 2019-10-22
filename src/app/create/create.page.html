@@ -67,7 +67,7 @@
   <ion-list>
     <ion-item *ngFor="let item of items">
       <!-- <ion-icon name="cart" slot="start"></ion-icon> -->
-      <app-item [item]=item></app-item>
+      <app-item [item]=item [pageName]=PAGE_NAME></app-item>
     </ion-item>
   </ion-list>
 

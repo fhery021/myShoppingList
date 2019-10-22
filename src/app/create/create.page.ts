@@ -28,7 +28,7 @@ export class CreatePage implements OnInit {
     notes: string
   };
 
-  private PAGE_NAME = 'create';
+  PAGE_NAME = 'create';
 
   constructor(
     private formBuilder: FormBuilder,

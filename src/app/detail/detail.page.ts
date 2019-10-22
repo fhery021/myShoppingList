@@ -18,7 +18,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class DetailPage implements OnInit {
 
-  pageName = 'detail';
+  PAGE_NAME = 'detail';
   shoppingList: ShoppingListModel;
 
   obsItems: Observable<Item[]>;
@@ -91,7 +91,7 @@ export class DetailPage implements OnInit {
   }
 
   private changeItem(itemEvent: ItemEvent) {
-    if (itemEvent.pageName === this.pageName) {
+    if (itemEvent.pageName === this.PAGE_NAME) {
       // this.shoppingListService.updateShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
       console.log('change item event' +
         'list id = ' + itemEvent.shoppingListId +
@@ -102,8 +102,11 @@ export class DetailPage implements OnInit {
   }
 
   private deleteItem(itemEvent: ItemEvent) {
-    if (itemEvent.pageName === this.pageName) {
+    if (itemEvent.pageName === this.PAGE_NAME) {
       this.itemService.deleteShoppingListItem(itemEvent.shoppingListId, itemEvent.item);
+      if (this.items.length === 0 && !this.showAddItemForm) {
+        this.toggleAddForm();
+      }
     }
   }
 
