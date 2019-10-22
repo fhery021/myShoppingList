@@ -6,7 +6,6 @@ import { ShoppingListModel } from '../model/shoppingListModel';
 import { ItemService } from '../shared/item/item.service';
 import { ItemEvent } from '../model/ItemEvent';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Item } from '../model/item';
 import { Observable } from 'rxjs';
 import { SharingService } from '../sharing.service';

@@ -36,12 +36,15 @@ export class ListPage implements OnInit {
 
   public onSend(shoppingListId: number) {
     this.sharingService.shareShoppingList(shoppingListId)
-    .catch(err => {
-      this.presentAlert('Share unsuccessful', 'An error has occured during sharing this shopping list');
-      console.log(err);
-    });
+      .catch(err => {
+        this.presentAlert('Share unsuccessful', 'An error has occured during sharing this shopping list');
+        console.log(err);
+      });
   }
 
+  public onImport() {
+    this.sharingService.importShoppingList();
+  }
 
   async presentConfirmAndDelete(sl: ShoppingListModel) {
     const alert = await this.alertCtrl.create({
@@ -61,7 +64,6 @@ export class ListPage implements OnInit {
           handler: () => {
             console.log('Delete clicked');
             this.shoppingListService.deleteShoppingList(sl);
-            this.goBack();
           }
         }
       ]

@@ -17,7 +17,7 @@ const routes: Routes = [
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
   },
   { path: 'create', loadChildren: './create/create.module#CreatePageModule' },
-  { path: 'detail/:id', loadChildren: './detail/detail.module#DetailPageModule' },  { path: 'share', loadChildren: './share/share.module#SharePageModule' }
+  { path: 'detail/:id', loadChildren: './detail/detail.module#DetailPageModule' }
 
 
 ];
