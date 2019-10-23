@@ -25,11 +25,6 @@ export class AppComponent {
       title: 'Create',
       url: '/create',
       icon: 'create'
-    },
-    {
-      title: 'Settings',
-      url: '/settings',
-      icon: 'settings'
     }
   ];
 
