@@ -14,17 +14,20 @@ export class AppComponent {
     {
       title: 'Home',
       url: '/home',
-      icon: 'home'
+      icon: 'home',
+      color: 'primary'
     },
     {
       title: 'My Shopping Lists',
       url: '/list',
-      icon: 'list'
+      icon: 'list',
+      color: 'success'
     },
     {
       title: 'Create',
       url: '/create',
-      icon: 'create'
+      icon: 'create',
+      color: 'success'
     }
   ];
 

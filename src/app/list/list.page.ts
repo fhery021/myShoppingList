@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 import { Location } from '@angular/common';
 import { SharingService } from '../sharing.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -19,7 +20,8 @@ export class ListPage implements OnInit {
     private shoppingListService: ShoppingListService,
     private location: Location,
     private alertCtrl: AlertController,
-    private sharingService: SharingService) {
+    private sharingService: SharingService,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -44,6 +46,10 @@ export class ListPage implements OnInit {
 
   public onImport() {
     this.sharingService.importShoppingList();
+  }
+
+  public onNewList() {
+    this.router.navigate(['/create']);
   }
 
   async presentConfirmAndDelete(sl: ShoppingListModel) {
