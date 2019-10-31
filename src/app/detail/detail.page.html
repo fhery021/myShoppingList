@@ -6,6 +6,11 @@
     <ion-title>
       {{ shoppingList.name }}
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button buttonType="secondary" (click)="presentActionSheet()">
+        <ion-icon name="options"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -13,27 +18,10 @@
 
 <ion-content>
 
-  <ion-fab vertical="top" horizontal="start" *ngIf="!showAddItemForm" >
-    <ion-fab-button color="light">
-      <ion-icon name="arrow-dropright"></ion-icon>
+  <ion-fab vertical="top" horizontal="start" *ngIf="!showAddItemForm" slot="fixed">
+    <ion-fab-button (click)="toggleAddForm()" color="light">
+      <ion-icon name="add"></ion-icon>
     </ion-fab-button>
-    <ion-fab-list side="end">
-      <ion-fab-button (click)="onSend()">
-        <ion-icon name="send" fill="outline" color="secondary"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button (click)="onDeleteShoppingList()">
-        <ion-icon name="trash" fill="outline" color="danger"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button (click)="goBack()">
-        <ion-icon name="backspace" fill="outline"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-
-    <ion-fab-list side="bottom">
-      <ion-fab-button (click)="toggleAddForm()">
-        <ion-icon name="add" fill="outline" color="success"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
   </ion-fab>
 
   <div *ngIf="showAddItemForm">

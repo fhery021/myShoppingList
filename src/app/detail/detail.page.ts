@@ -9,7 +9,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Item } from '../model/item';
 import { Observable } from 'rxjs';
 import { SharingService } from '../sharing.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-detail',
@@ -44,8 +44,8 @@ export class DetailPage implements OnInit {
     private itemService: ItemService,
     private formBuilder: FormBuilder,
     private sharingService: SharingService,
-    private alertCtrl: AlertController
-
+    private alertCtrl: AlertController,
+    public actionSheetController: ActionSheetController
   ) {
     this.createForm = this.formBuilder.group({
       product: ['', Validators.required],
@@ -178,5 +178,46 @@ export class DetailPage implements OnInit {
 
     await alert.present();
   }
+
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Options',
+      buttons: [{
+        text: 'Send shopping list',
+        icon: 'send',
+        handler: () => {
+          this.onSend();
+        }
+      }, {
+        text: 'Add new item',
+        icon: 'add',
+        handler: () => {
+          this.toggleAddForm();
+        }
+      }, {
+        text: 'Delete shopping list',
+        role: 'destructive',
+        icon: 'trash',
+        handler: () => {
+          this.onDeleteShoppingList();
+        }
+      }, {
+        text: 'Go back to my shopping lists',
+        icon: 'backspace',
+        handler: () => {
+          this.goBack();
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+
 
 }

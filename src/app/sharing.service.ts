@@ -52,7 +52,8 @@ export class SharingService {
         this.file.writeExistingFile(this.file.cacheDirectory, fileName, content)
           .then(() => {
             this.showToast('File exported successfully');
-            const message = 'Download the attached shopping list and import it in the Share menu';
+            const message = 'How to import the shopping list: ' +
+            'Download the attachment and in My Shopping Lists select Import';
             const subject = 'Shopping list:' + this.shoppingListModel.name;
 
             // this.socialSharing.canShareViaEmail().then(() => {

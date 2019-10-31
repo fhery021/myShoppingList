@@ -25,22 +25,22 @@
           </ion-item>
         </ion-col>
 
-        <ion-col *ngIf="item.quantity || editMode">
+        <ion-col *ngIf="item.quantity || editMode" size="auto">
           <ion-item>
             <ion-label position="floating" *ngIf="editMode">Quantity</ion-label>
             <ion-input [readonly]="!editMode" [(ngModel)]="item.quantity" (click)="$event.target.select()"></ion-input>
           </ion-item>
         </ion-col>
 
-        <ion-col *ngIf="item.unit || editMode">
+        <ion-col *ngIf="item.unit || editMode" size="auto">
           <ion-item>
             <ion-label position="floating" *ngIf="editMode">Unit</ion-label>
             <ion-input [readonly]="!editMode" [(ngModel)]="item.unit" (click)="$event.target.select()"></ion-input>
           </ion-item>
         </ion-col>
 
-        <ion-col>
-          <ion-item>
+        <ion-col size="auto">
+          <ion-item >
             <ion-checkbox slot="end" [(ngModel)]="item.isShopped" (ionChange)="onClickShopped()"
               [checked]="item.isShopped">
             </ion-checkbox>
