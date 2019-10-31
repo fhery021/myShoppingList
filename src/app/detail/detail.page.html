@@ -19,12 +19,12 @@
 <ion-content>
 
   <ion-fab vertical="top" horizontal="start" *ngIf="!showAddItemForm" slot="fixed">
-    <ion-fab-button (click)="toggleAddForm()" color="light">
+    <ion-fab-button (click)="onAddButton()" color="light">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <div *ngIf="showAddItemForm">
+  <div *ngIf="showAddItemForm" #addItemForm>
     <ion-card>
       <form [formGroup]="createForm" (ngSubmit)="onSubmitAddItem()">
         <ion-grid>

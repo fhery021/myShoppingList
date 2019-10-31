@@ -42,8 +42,8 @@ export class ItemService {
   }
 
   // CREATE
-  public addItem(shoppingListId: number, newItem: Item): void {
-    this.db.addItem(newItem, shoppingListId).then(_ => this.showToast('Item added'));
+  public addItem(shoppingListId: number, newItem: Item): Promise<void> {
+    return this.db.addItem(newItem, shoppingListId).then(_ => this.showToast('Item added'));
   }
 
   // UPDATE

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ShoppingListService } from '../shopping-list.service';
@@ -10,6 +10,7 @@ import { Item } from '../model/item';
 import { Observable } from 'rxjs';
 import { SharingService } from '../sharing.service';
 import { AlertController, ActionSheetController } from '@ionic/angular';
+import { IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-detail',
@@ -17,6 +18,7 @@ import { AlertController, ActionSheetController } from '@ionic/angular';
   styleUrls: ['./detail.page.scss']
 })
 export class DetailPage implements OnInit {
+  @ViewChild(IonContent, {static: false}) content: IonContent;
 
   PAGE_NAME = 'detail';
   shoppingList: ShoppingListModel;
@@ -121,9 +123,17 @@ export class DetailPage implements OnInit {
           this.newItem.quantity,
           this.newItem.unit,
           this.newItem.notes,
-          false));
-      this.toggleAddForm();
+          false))
+          .then(() => {
+            this.toggleAddForm();
+            this.content.scrollToBottom();
+          });
     }
+  }
+
+  onAddButton() {
+    this.toggleAddForm();
+    this.content.scrollToTop();
   }
 
   toggleAddForm(): void {
