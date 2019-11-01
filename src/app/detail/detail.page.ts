@@ -18,7 +18,7 @@ import { IonContent } from '@ionic/angular';
   styleUrls: ['./detail.page.scss']
 })
 export class DetailPage implements OnInit {
-  @ViewChild(IonContent, {static: false}) content: IonContent;
+  @ViewChild(IonContent, { static: false }) content: IonContent;
 
   PAGE_NAME = 'detail';
   shoppingList: ShoppingListModel;
@@ -124,10 +124,10 @@ export class DetailPage implements OnInit {
           this.newItem.unit,
           this.newItem.notes,
           false))
-          .then(() => {
-            this.toggleAddForm();
-            this.content.scrollToBottom();
-          });
+        .then(() => {
+          this.toggleAddForm();
+          this.content.scrollToBottom();
+        });
     }
   }
 
@@ -151,6 +151,41 @@ export class DetailPage implements OnInit {
         this.presentAlert('Share unsuccessful', 'An error has occured during sharing this shopping list');
         console.log(err);
       });
+  }
+
+  async renameShoppingList() {
+    const alert = await this.alertCtrl.create({
+      header: 'Change shopping list name',
+      inputs: [
+        {
+          name: 'slName',
+          type: 'text',
+          id: 'slName',
+          value: this.shoppingList.name
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: (alertData) => {
+            this.shoppingListService.renameShoppingList(this.shoppingListId, alertData.slName)
+              .catch(err => {
+                console.error('Cannot rename shopping list', 'Error: ' + err);
+              });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+
   }
 
   async presentConfirmAndDelete() {
@@ -203,6 +238,12 @@ export class DetailPage implements OnInit {
         icon: 'add',
         handler: () => {
           this.toggleAddForm();
+        }
+      }, {
+        text: 'Rename shopping list',
+        icon: 'create',
+        handler: () => {
+          this.renameShoppingList();
         }
       }, {
         text: 'Delete shopping list',

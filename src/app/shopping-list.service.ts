@@ -61,12 +61,16 @@ export class ShoppingListService {
     return false;
   }
 
-  // UPDATE
+  // UPDATE -version 1 - maybe will be deleted
   public updateShoppingList(sl: ShoppingListModel, items: Item[]) {
     this.db.updateShoppingList(sl.id, sl.name, items).then(_ => {
       this.listsChanged.emit(this.shoppingLists.slice());
       this.showToast('Shopping List Updated');
     });
+  }
+
+  public renameShoppingList(shoppingListId: number, name: string) {
+    return this.db.renameShoppingList(shoppingListId, name).then(() => this.listsChanged.emit(this.shoppingLists.slice()));
   }
 
   // DELETE

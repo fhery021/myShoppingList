@@ -191,6 +191,7 @@ export class DatabaseService {
       .then(_ => { this.loadItems(); });
   }
 
+  // UPDATE -version 1 - maybe will be deleted
   updateShoppingList(shoppingListId: number, shoppingListName: string, items: Item[]) {
     return this.database.executeSql('UPDATE shoppingLists SET listName = ${shoppingListName} WHERE id = ${shoppingListId}').then(_ => {
       items.forEach(item => {
@@ -200,5 +201,9 @@ export class DatabaseService {
     // TODO catch stuff here!
   }
 
+  renameShoppingList(shoppingListId: number, shoppingListName: string) {
+    return this.database.executeSql(
+      'UPDATE shoppingLists SET listName = ? WHERE id = ?', [shoppingListName, shoppingListId]).then(() => this.loadShoppingLists());
+  }
 
 }
