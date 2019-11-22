@@ -173,7 +173,7 @@ export class DetailPage implements OnInit {
             console.log('Confirm Cancel');
           }
         }, {
-          text: 'Ok',
+          text: 'Rename',
           handler: (alertData) => {
             this.shoppingListService.renameShoppingList(this.shoppingListId, alertData.slName)
               .catch(err => {
